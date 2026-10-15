@@ -190,8 +190,22 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <h2 class="sectionTitle">PITCH COLLECTION / SCALE</h2>
 <div class="legend"><span class="dot origin"></span>letter-derived &nbsp;&nbsp;<span class="dot added"></span>added / selected</div>
 <div class="keyboard" id="keyboard"></div>
-<div class="row"><button class="secondary" id="originOnly">LETTER TONES ONLY</button><button class="secondary" id="all12">ALL 12</button><button class="secondary" id="clearAdded">CLEAR ADDED</button></div>
+<div class="row"><button class="secondary" id="originOnly">LETTER TONES ONLY</button><button class="secondary" id="all12">ALL 12</button><button class="secondary" id="clearAdded">CLEAR ALL</button></div>
 <div class="small" style="margin-top:12px">CURRENT COLLECTION</div><div id="collection" class="pcset"></div>
+<div class="small" style="margin-top:10px">AVAILABLE LETTERS <span id="availableRoot" style="color:#d9a65d"></span></div>
+<div id="availableLetters" class="pcset" style="user-select:text;cursor:text;line-height:1.8">—</div>
+<div class="small" style="margin-top:16px">SCALE PRESETS</div>
+<div class="inlineControls scalePresetControls">
+<div><label>ROOT</label><select id="presetScaleRoot"></select></div>
+<div><label>SCALE</label><select id="presetScaleName"></select></div>
+<button id="loadScalePreset">LOAD SCALE</button>
+</div>
+<div id="scalePresetPreview" class="small" style="margin-top:5px;line-height:1.7"></div>
+<div class="inlineControls">
+<div><label>MY SCALE PRESETS</label><select id="customScaleSelect"></select></div>
+<button class="secondary" id="saveCustomScale">SAVE CURRENT</button>
+<button class="secondary" id="deleteCustomScale">DELETE</button>
+</div>
 <div class="controls">
 <div><label>START NOTE</label><select id="startNote"><option value="0">C</option><option value="1">D♭ / C♯</option><option value="2">D</option><option value="3">E♭ / D♯</option><option value="4">E</option><option value="5">F</option><option value="6">G♭ / F♯</option><option value="7">G</option><option value="8">A♭ / G♯</option><option value="9">A</option><option value="10">B♭ / A♯</option><option value="11">B</option></select></div><div><label>SCALE OCTAVE</label><select id="scaleOct"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6</option></select></div>
 <div><label>PLAY DIRECTION</label><select id="direction"><option value="up" selected>↑ Ascending</option><option value="down">↓ Descending</option><option value="both">↑↓ Both</option></select></div>
@@ -214,7 +228,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <div class="controls" style="grid-template-columns:150px 170px 130px 120px auto"><div><label>PROGRESSION BPM</label><input id="progBpm" type="number" min="30" max="240" value="80"></div><div><label>PLAY MODE</label><select id="progPlayMode"><option value="block" selected>BLOCK</option><option value="up">ARP ↑</option><option value="down">ARP ↓</option><option value="updown">ARP ↑↓</option></select></div><div><label>ARP RATE</label><select id="arpRate"><option value="1">1/4</option><option value="0.5" selected>1/8</option><option value="0.25">1/16</option></select></div><div><label>LOOP</label><select id="progLoop"><option value="off" selected>OFF</option><option value="on">ON</option></select></div><button id="newProgression">＋ NEW PROGRESSION</button></div>
 <div id="progressions" class="progressions"></div>
 </section>
-</main><div class="versionBadge">TONAL MAGIC v2.36 PWA</div>
+</main><div class="versionBadge">TONAL MAGIC v2.37 PWA</div>
 <script>
 const LATIN={A:["C3",48],B:["C#3",49],C:["D3",50],D:["D#3",51],E:["E3",52],F:["F3",53],G:["F#3",54],H:["G3",55],I:["G#3",56],J:["A3",57],K:["A#3",58],L:["B3",59],M:["C4",60],N:["C#4",61],O:["D4",62],P:["D#4",63],Q:["E4",64],R:["F4",65],S:["F#4",66],T:["G4",67],U:["A4",69],V:["A4",69],W:["A4",69],X:["G#4",68],Y:["A#4",70],Z:["B4",71]};
 const GREEK={Α:["C3",48],Β:["C#3",49],Γ:["D3",50],Δ:["D#3",51],Ε:["E3",52],Ζ:["F3",53],Η:["F#3",54],Θ:["G3",55],Ι:["G#3",56],Κ:["A3",57],Λ:["A#3",58],Μ:["B3",59],Ν:["C4",60],Ξ:["C#4",61],Ο:["D4",62],Π:["D#4",63],Ρ:["E4",64],Σ:["F4",65],Τ:["F#4",66],Υ:["G4",67],Φ:["G#4",68],Χ:["A4",69],Ψ:["A#4",70],Ω:["B4",71]};
@@ -243,6 +257,19 @@ function orderedSelected(){
 }
 function displayName(p){return accidental.value==="flat"?FLATN[pc(p)]:SHARPN[pc(p)]}
 function collectionText(){return orderedSelected().map(displayName).join(" · ")||"—"}
+function updateAvailableLetters(){
+ const el=document.getElementById("availableLetters"),label=document.getElementById("availableRoot");
+ if(!el)return;
+ const map=rootMap(),groups=[];
+ for(let pitch=0;pitch<12;pitch++){
+   if(!selected.has(pitch))continue;
+   const letters=Object.keys(map).filter(ch=>pc(map[ch][1]+inputRoot)===pitch);
+   if(letters.length)groups.push(letters.join(""));
+ }
+ el.textContent=groups.join(" · ")||"—";
+ if(label)label.textContent=`· A=${SHARPN[pc(inputRoot)]} · ${alphabet.value==="greek"?"GREEK":"LATIN"}`;
+}
+
 function refreshStartNoteLabels(){
  const vals=[0,1,2,3,4,5,6,7,8,9,10,11];
  [...startNote.options].forEach((o,i)=>{o.textContent=displayName(vals[i])});
@@ -263,7 +290,7 @@ function makeSection(name,w="LOVE THE EARTH"){return {name,word:w,alphabet:"lati
 function snapshotSection(){return {name:sections[activeSection]?.name||`SECTION ${sectionLetter(activeSection)}`,word:word.value,alphabet:alphabet.value,bpm:+bpm.value||80,seqOct:+seqOct.value||0,soundType:soundType.value,accidental:accidental.value,startNote:+startNote.value||0,scaleOct:+scaleOct.value||4,direction:direction.value,letterFilter:letterFilter.value,letterGrouping:letterGrouping.value,numberMode:numberMode.value,letterRoot:rootOffset(),inputRoot,pitchCarry:[...pitchCarry],rootMode:rootMode.value,selected:[...selected],mode,chordView,favorites:[...favorites],harmonization:harmSlots.map(x=>x.chord?{notes:[...x.chord.notes],name:x.chord.name||""}:null)}}
 function persistActiveSection(){if(isRestoringSection||!sections.length)return;sections[activeSection]=snapshotSection();renderSectionTabs()}
 function renderSectionTabs(){sectionTabs.innerHTML="";sections.forEach((x,i)=>{let b=document.createElement("button");b.className="secondary sectiontab"+(i===activeSection?" active":"");b.textContent=`${sectionLetter(i)}: ${x.word||x.name}`;b.onclick=()=>restoreSection(i);sectionTabs.appendChild(b)})}
-function restoreSection(i){if(i<0||i>=sections.length)return;if(!isRestoringSection&&sections.length)persistActiveSection();activeSection=i;let x=sections[i];isRestoringSection=true;word.value=x.word||"";alphabet.value=(x.alphabet==="greek"?"greek":"latin");bpm.value=x.bpm??80;seqOct.value=x.seqOct??0;soundType.value=x.soundType||"decay";accidental.value=x.accidental||"flat";scaleOct.value=x.scaleOct??4;direction.value=x.direction||"up";letterFilter.value=x.letterFilter||"all";letterGrouping.value=x.letterGrouping||"off";numberMode.value=x.numberMode||"modern";document.getElementById("transposeShift").value="0";rootMode.value=x.rootMode||"letters";inputRoot=+(x.inputRoot??0);pitchCarry=x.pitchCarry||[];lastInputWord=word.value;shiftUndo=[];updateRootHint();mode=x.mode||"step3";chordView=x.chordView||"all";favorites=new Set(x.favorites||[]);let a=parse();origin=new Set(a.filter(y=>!y.space&&!y.mute).map(y=>pc(y.midi)));selected=new Set(x.selected?.length?x.selected:origin);let first=a.find(y=>!y.space&&!y.mute);startNote.value=String(x.startNote==null?(first?pc(first.midi):0):x.startNote);refreshStartNoteLabels();render(a);syncHarmSlots();(x.harmonization||[]).forEach((ch,j)=>{if(ch&&harmSlots[j])harmSlots[j].chord={notes:[...ch.notes],name:ch.name||""}});renderHarm();renderProgressions();document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));showAllChords.classList.toggle("active",chordView==="all");showFavChords.classList.toggle("active",chordView==="fav");isRestoringSection=false;renderSectionTabs()}
+function restoreSection(i){if(i<0||i>=sections.length)return;if(!isRestoringSection&&sections.length)persistActiveSection();activeSection=i;let x=sections[i];isRestoringSection=true;word.value=x.word||"";alphabet.value=(x.alphabet==="greek"?"greek":"latin");bpm.value=x.bpm??80;seqOct.value=x.seqOct??0;soundType.value=x.soundType||"decay";accidental.value=x.accidental||"flat";scaleOct.value=x.scaleOct??4;direction.value=x.direction||"up";letterFilter.value=x.letterFilter||"all";letterGrouping.value=x.letterGrouping||"off";numberMode.value=x.numberMode||"modern";document.getElementById("transposeShift").value="0";rootMode.value=x.rootMode||"letters";inputRoot=+(x.inputRoot??0);pitchCarry=x.pitchCarry||[];lastInputWord=word.value;shiftUndo=[];updateRootHint();mode=x.mode||"step3";chordView=x.chordView||"all";favorites=new Set(x.favorites||[]);let a=parse();origin=new Set(a.filter(y=>!y.space&&!y.mute).map(y=>pc(y.midi)));selected=new Set(Array.isArray(x.selected)?x.selected:origin);let first=a.find(y=>!y.space&&!y.mute);startNote.value=String(x.startNote==null?(first?pc(first.midi):0):x.startNote);refreshStartNoteLabels();render(a);syncHarmSlots();(x.harmonization||[]).forEach((ch,j)=>{if(ch&&harmSlots[j])harmSlots[j].chord={notes:[...ch.notes],name:ch.name||""}});renderHarm();renderProgressions();document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));showAllChords.classList.toggle("active",chordView==="all");showFavChords.classList.toggle("active",chordView==="fav");isRestoringSection=false;renderSectionTabs()}
 function addSection(){persistActiveSection();let i=sections.length;sections.push(makeSection(`SECTION ${sectionLetter(i)}`,""));restoreSection(i)}
 function duplicateCurrentSection(){persistActiveSection();let x=JSON.parse(JSON.stringify(sections[activeSection]));x.name+=" COPY";sections.splice(activeSection+1,0,x);restoreSection(activeSection+1)}
 function deleteCurrentSection(){if(sections.length<=1)return;sections.splice(activeSection,1);activeSection=Math.min(activeSection,sections.length-1);restoreSection(activeSection)}
@@ -275,7 +302,7 @@ function numberValue(ch){if(alphabet.value!=="latin")return null;let n=ch.charCo
 function renderNumbers(){numberRow.innerHTML="";if(alphabet.value!=="latin"){numberRow.innerHTML='<span class="small">Number display is available for Latin letters.</span>';return}let total=0,count=0;for(let c of Array.from(word.value||"")){let x=norm(c);if(!x||x===" "||!LATIN[x])continue;let shown=x;let v=numberValue(shown);if(v==null)continue;total+=v;count++;let d=document.createElement("div");d.className="numberCell";d.innerHTML=`<div class="nletter">${shown}</div><div class="nvalue">${v}</div>`;numberRow.appendChild(d)}if(count){let reduced=total;while(reduced>9)reduced=String(reduced).split("").reduce((a,b)=>a+(+b),0);let d=document.createElement("div");d.className="numberCell";d.style.minWidth="100px";d.innerHTML=`<div class="nletter">Σ TOTAL</div><div class="nvalue">${total}${total!==reduced?` → ${reduced}`:""}</div>`;numberRow.appendChild(d)}}
 function inputLetters(){let map=alphabet.value==="latin"?LATIN:GREEK,out=new Set;for(let c of Array.from(word.value)){let x=norm(c);if(x&&x!==" "&&map[x])out.add(x)}return out}
 function renderLetterToneMap(){letterToneMap.innerHTML="";let map=alphabet.value==="latin"?LATIN:GREEK,active=new Set(parse().filter(x=>!x.space).map(x=>x.ch));for(let p=0;p<12;p++){let letters=Object.entries(map).filter(([k,v])=>pc(v[1]+inputRoot)===p).map(([k])=>k),hit=letters.some(k=>active.has(k));let d=document.createElement("div");d.className="mapCell"+(hit?" wordActive":"");let rendered=letters.map(k=>`<span class="mapLetter${active.has(k)?" active":""}">${k}</span>`).join(" · ");d.innerHTML=`<div class="mapPitch">${displayName(p)}</div><div class="mapLetters">${rendered||"—"}</div>`;letterToneMap.appendChild(d)}}
-function render(a=parse()){sequence.innerHTML="";a.forEach(x=>{let d=document.createElement("div");d.className="cell";if(x.mute){d.style.opacity=".42";d.style.borderStyle="dashed"}d.innerHTML=x.space?'<div class="letter">⏸</div><div class="note">rest</div>':x.mute?`<div class="letter">${x.ch}</div><div class="note">MUTE</div>`:`<div class="letter">${x.ch}</div><div class="note">${displayName(pc(x.midi))}${Math.floor(x.midi/12)-1}</div>`;sequence.appendChild(d)});renderNumbers(a);renderLetterToneMap();let fst=firstLetterPC();folded.textContent=orderedFrom(origin,fst).map(displayName).join(" · ")||"—";keys();collection.textContent=collectionText();renderScales();renderChords()}
+function render(a=parse()){sequence.innerHTML="";a.forEach(x=>{let d=document.createElement("div");d.className="cell";if(x.mute){d.style.opacity=".42";d.style.borderStyle="dashed"}d.innerHTML=x.space?'<div class="letter">⏸</div><div class="note">rest</div>':x.mute?`<div class="letter">${x.ch}</div><div class="note">MUTE</div>`:`<div class="letter">${x.ch}</div><div class="note">${displayName(pc(x.midi))}${Math.floor(x.midi/12)-1}</div>`;sequence.appendChild(d)});renderNumbers(a);renderLetterToneMap();let fst=firstLetterPC();folded.textContent=orderedFrom(origin,fst).map(displayName).join(" · ")||"—";keys();collection.textContent=collectionText();updateAvailableLetters();renderScales();renderChords()}
 function keys(){
  keyboard.innerHTML="";
  const whites=[0,2,4,5,7,9,11];
@@ -298,12 +325,86 @@ function keys(){
    if(p===+startNote.value)k.style.outline="2px solid #f0d28c";
    k.onclick=()=>{
      selected.has(p)?selected.delete(p):selected.add(p);
-     keys();collection.textContent=collectionText();renderChords()
+     keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection();persistActiveSection()
    }
  })
 }
 const SP=[["Major",[0,2,4,5,7,9,11]],["Natural Minor",[0,2,3,5,7,8,10]],["Harmonic Minor",[0,2,3,5,7,8,11]],["Melodic Minor",[0,2,3,5,7,9,11]],["Dorian",[0,2,3,5,7,9,10]],["Phrygian",[0,1,3,5,7,8,10]],["Lydian",[0,2,4,6,7,9,11]],["Mixolydian",[0,2,4,5,7,9,10]],["Locrian",[0,1,3,5,6,8,10]],["Major Pentatonic",[0,2,4,7,9]],["Minor Pentatonic",[0,3,5,7,10]],["Whole Tone",[0,2,4,6,8,10]],["Octatonic H-W",[0,1,3,4,6,7,9,10]],["Octatonic W-H",[0,2,3,5,6,8,9,11]]];
-function renderScales(){scalesEl.innerHTML="";let r=[];for(let root=0;root<12;root++)for(let [name,pat] of SP){let s=new Set(pat.map(x=>(x+root)%12));if([...origin].every(x=>s.has(x)))r.push({root,name,s})}r.sort((a,b)=>a.s.size-b.s.size||a.root-b.root);r.slice(0,40).forEach(x=>{let d=document.createElement("div");d.className="pill";d.textContent=`${displayName(x.root)} ${x.name} (${x.s.size})`;d.onclick=()=>{selected=new Set(x.s);keys();collection.textContent=collectionText();renderChords()};scalesEl.appendChild(d)});if(!r.length)scalesEl.textContent="No matching preset scale."}
+
+const EXTRA_SCALE_PRESETS=[
+ ["Major Blues",[0,2,3,4,7,9]],
+ ["Minor Blues",[0,3,5,6,7,10]],
+ ["Mystic / Prometheus",[0,2,4,6,9,10]],
+ ["Chromatic",[0,1,2,3,4,5,6,7,8,9,10,11]]
+];
+const SCALE_PRESET_LIBRARY=[...SP,...EXTRA_SCALE_PRESETS];
+const CUSTOM_SCALE_STORAGE="tonalMagicCustomScales_v237";
+function readCustomScales(){
+ try{
+   let data=JSON.parse(localStorage.getItem(CUSTOM_SCALE_STORAGE)||"[]");
+   if(!Array.isArray(data))return [];
+   return data.filter(x=>x&&typeof x.name==="string"&&Array.isArray(x.pitches))
+    .map(x=>({name:x.name.slice(0,80),pitches:[...new Set(x.pitches.filter(n=>Number.isInteger(n)&&n>=0&&n<12))].sort((a,b)=>a-b)})).slice(0,100);
+ }catch(e){return []}
+}
+let customScalePresets=readCustomScales();
+function writeCustomScales(){
+ try{localStorage.setItem(CUSTOM_SCALE_STORAGE,JSON.stringify(customScalePresets));return true}
+ catch(e){alert("Could not save presets in this browser.");return false}
+}
+function populateCustomScales(chosen){
+ const select=document.getElementById("customScaleSelect");
+ if(!select)return;
+ select.innerHTML="";
+ const placeholder=document.createElement("option");
+ placeholder.value="";placeholder.textContent="— Select saved scale —";select.appendChild(placeholder);
+ customScalePresets.forEach((item,i)=>{let opt=document.createElement("option");opt.value=String(i);opt.textContent=item.name;select.appendChild(opt)});
+ if(chosen!==undefined&&chosen!==null)select.value=String(chosen);
+}
+function scalePresetPreview(){
+ const root=Number(document.getElementById("presetScaleRoot")?.value||0);
+ const index=Number(document.getElementById("presetScaleName")?.value||0);
+ const preset=SCALE_PRESET_LIBRARY[index],el=document.getElementById("scalePresetPreview");
+ if(!preset||!el)return;
+ el.textContent=preset[1].map(n=>displayName((root+n)%12)).join(" · ")+`  (${preset[1].length} notes)`;
+}
+function initializeScalePresets(){
+ const root=document.getElementById("presetScaleRoot"),scale=document.getElementById("presetScaleName");
+ if(!root||!scale)return;
+ for(let i=0;i<12;i++){const opt=document.createElement("option");opt.value=String(i);opt.textContent=SHARPN[i];root.appendChild(opt)}
+ SCALE_PRESET_LIBRARY.forEach(([name],i)=>{const opt=document.createElement("option");opt.value=String(i);opt.textContent=name;scale.appendChild(opt)});
+ root.onchange=scale.onchange=scalePresetPreview;
+ document.getElementById("loadScalePreset").onclick=()=>{
+   const preset=SCALE_PRESET_LIBRARY[Number(scale.value)];
+   if(!preset)return;
+   selected=new Set(preset[1].map(n=>(n+Number(root.value))%12));
+   keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection();
+ };
+ document.getElementById("saveCustomScale").onclick=()=>{
+   const name=prompt("Name this scale preset:");
+   if(name===null||!name.trim())return;
+   const clean=name.trim().slice(0,80),pitches=[...selected].sort((a,b)=>a-b);
+   const existing=customScalePresets.findIndex(x=>x.name.toLocaleLowerCase()===clean.toLocaleLowerCase());
+   if(existing>=0&&!confirm(`Replace preset "${customScalePresets[existing].name}"?`))return;
+   if(existing>=0)customScalePresets[existing]={name:clean,pitches};
+   else customScalePresets.push({name:clean,pitches});
+   customScalePresets.sort((a,b)=>a.name.localeCompare(b.name));
+   if(writeCustomScales())populateCustomScales(customScalePresets.findIndex(x=>x.name===clean));
+ };
+ document.getElementById("customScaleSelect").onchange=e=>{
+   const i=Number(e.target.value);if(e.target.value===""||!customScalePresets[i])return;
+   selected=new Set(customScalePresets[i].pitches);
+   keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection();
+ };
+ document.getElementById("deleteCustomScale").onclick=()=>{
+   const el=document.getElementById("customScaleSelect"),i=Number(el.value);
+   if(el.value===""||!customScalePresets[i])return;
+   if(!confirm(`Delete preset "${customScalePresets[i].name}"?`))return;
+   customScalePresets.splice(i,1);if(writeCustomScales())populateCustomScales();
+ };
+ populateCustomScales();scalePresetPreview();
+}
+function renderScales(){scalesEl.innerHTML="";let r=[];for(let root=0;root<12;root++)for(let [name,pat] of SP){let s=new Set(pat.map(x=>(x+root)%12));if([...origin].every(x=>s.has(x)))r.push({root,name,s})}r.sort((a,b)=>a.s.size-b.s.size||a.root-b.root);r.slice(0,40).forEach(x=>{let d=document.createElement("div");d.className="pill";d.textContent=`${displayName(x.root)} ${x.name} (${x.s.size})`;d.onclick=()=>{selected=new Set(x.s);keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection()};scalesEl.appendChild(d)});if(!r.length)scalesEl.textContent="No matching preset scale."}
 const EXACT_DICT=[["",[0,4,7]],["m",[0,3,7]],["dim",[0,3,6]],["aug",[0,4,8]],["sus2",[0,2,7]],["sus4",[0,5,7]],["6",[0,4,7,9]],["m6",[0,3,7,9]],["maj7",[0,4,7,11]],["7",[0,4,7,10]],["m7",[0,3,7,10]],["m(maj7)",[0,3,7,11]],["m7(b5)",[0,3,6,10]],["dim7",[0,3,6,9]],["maj7(#5)",[0,4,8,11]],["maj7(b5)",[0,4,6,11]],["7(#5)",[0,4,8,10]],["7(b5)",[0,4,6,10]],["7sus4",[0,5,7,10]],["add9",[0,2,4,7]],["m(add9)",[0,2,3,7]],["9",[0,4,7,10,14]],["maj9",[0,4,7,11,14]],["m9",[0,3,7,10,14]]];
 const OMIT_DICT=EXACT_DICT.filter(x=>x[1].length===4);
 function setEq(a,b){return a.size===b.size&&[...a].every(x=>b.has(x))}
@@ -405,14 +506,16 @@ document.getElementById("loadWordPreset").onclick=loadSelectedWordPreset;
 document.getElementById("deleteWordPreset").onclick=deleteSelectedWordPreset;
 readWordPresets();renderWordPresets();
 word.oninput=()=>{reconcileInputCarry(word.value);harmMemory.clear();rebuild()};alphabet.onchange=()=>{pitchCarry=[];lastInputWord=word.value;harmMemory.clear();rebuild()};letterFilter.onchange=rebuild;letterGrouping.onchange=()=>{harmMemory.clear();rebuild()};numberMode.onchange=()=>{renderNumbers();persistActiveSection()};document.getElementById("transposeShift").oninput=rootMode.onchange=updateRootHint;document.getElementById("shiftMinus").onclick=()=>{let el=document.getElementById("transposeShift");el.value=Math.max(-12,rootOffset()-1);updateRootHint()};document.getElementById("shiftPlus").onclick=()=>{let el=document.getElementById("transposeShift");el.value=Math.min(12,rootOffset()+1);updateRootHint()};document.getElementById("applyRootShift").onclick=applyRootShift;document.getElementById("undoRootShift").onclick=undoLastRootShift;applyHarmPreset.onclick=applyHarmonyPreset;
-accidental.onchange=()=>{refreshStartNoteLabels();render(parse());renderHarm();renderProgressions();persistActiveSection()};startNote.onchange=()=>{keys();collection.textContent=collectionText();renderChords();renderHarm();renderProgressions();persistActiveSection()};playSequence.onclick=playSeq;playScale.onclick=playScaleFn;document.getElementById("stop").onclick=stopAll;
-originOnly.onclick=clearAdded.onclick=()=>{selected=new Set(origin);keys();collection.textContent=collectionText();renderChords()};
-all12.onclick=()=>{selected=new Set([...Array(12).keys()]);keys();collection.textContent=collectionText();renderChords()};
+accidental.onchange=()=>{scalePresetPreview();refreshStartNoteLabels();render(parse());renderHarm();renderProgressions();persistActiveSection()};startNote.onchange=()=>{keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();renderHarm();renderProgressions();persistActiveSection()};playSequence.onclick=playSeq;playScale.onclick=playScaleFn;document.getElementById("stop").onclick=stopAll;
+originOnly.onclick=()=>{selected=new Set(origin);keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection()};
+clearAdded.onclick=()=>{selected=new Set();keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection()};
+all12.onclick=()=>{selected=new Set([...Array(12).keys()]);keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection()};
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));renderChords()});
 showAllChords.onclick=()=>{chordView="all";showAllChords.classList.add("active");showFavChords.classList.remove("active");renderChords()};showFavChords.onclick=()=>{chordView="fav";showFavChords.classList.add("active");showAllChords.classList.remove("active");renderChords()};
 newProgression.onclick=()=>addProgressionObj();playHarm.onclick=playHarmFn;document.getElementById("stopHarm").onclick=stopAll;document.getElementById("addHarmSketch").onclick=addHarmonizationToSketchbook;copyHarm.onclick=()=>copyText(harmText());midiHarm.onclick=()=>exportChordListMidi(harmSlots.filter(x=>x.chord).map(x=>x.chord),+progBpm.value||80,"TONAL_MAGIC_harmonization.mid");clearHarm.onclick=()=>{harmSlots.forEach(x=>x.chord=null);renderHarm()};
 newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
 const scalesEl=document.getElementById("scales"),chordsEl=document.getElementById("chords");
+initializeScalePresets();
 addProgressionObj("Progression A");sections=[makeSection("SECTION A","LOVE THE EARTH")];activeSection=0;isRestoringSection=true;restoreSection(0);
 </script>
 <script>

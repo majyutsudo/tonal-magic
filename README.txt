@@ -1,9 +1,5 @@
-TONAL MAGIC v2.36 — WORD PRESETS alphabetical ordering
+TONAL MAGIC v2.37
 
-Changes from v2.35:
-- Word presets are shown in alphabetical order, Latin A–Z followed by Greek Α–Ω.
-- Sorting applies to previously saved presets too.
-- Newly saved presets remain selected after sorting.
-- Saved browser data is unchanged; no migration is required.
+New: SCALE PRESETS (root + scale + LOAD), AVAILABLE LETTERS for current collection and active A=X, CLEAR ALL, browser-local custom scale presets.
 
-Deploy: replace your GitHub Pages files with the contents of this ZIP.
+Upload all files to the same GitHub Pages directory. Existing word presets remain in local browser storage.
