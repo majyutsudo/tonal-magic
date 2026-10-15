@@ -1,5 +1,5 @@
-TONAL MAGIC v2.37
+TONAL MAGIC v2.38
 
-New: SCALE PRESETS (root + scale + LOAD), AVAILABLE LETTERS for current collection and active A=X, CLEAR ALL, browser-local custom scale presets.
+AVAILABLE LETTERS now displays as small muted supporting text (12px), while CURRENT COLLECTION remains unchanged. No changes to scale or mapping logic.
 
-Upload all files to the same GitHub Pages directory. Existing word presets remain in local browser storage.
+Upload the ZIP contents to the same GitHub Pages directory.

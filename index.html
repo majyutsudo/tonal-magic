@@ -193,7 +193,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <div class="row"><button class="secondary" id="originOnly">LETTER TONES ONLY</button><button class="secondary" id="all12">ALL 12</button><button class="secondary" id="clearAdded">CLEAR ALL</button></div>
 <div class="small" style="margin-top:12px">CURRENT COLLECTION</div><div id="collection" class="pcset"></div>
 <div class="small" style="margin-top:10px">AVAILABLE LETTERS <span id="availableRoot" style="color:#d9a65d"></span></div>
-<div id="availableLetters" class="pcset" style="user-select:text;cursor:text;line-height:1.8">—</div>
+<div id="availableLetters" class="small" style="font-size:12px;letter-spacing:.02em;user-select:text;cursor:text;line-height:1.6;margin:6px 0 12px;overflow-wrap:anywhere">—</div>
 <div class="small" style="margin-top:16px">SCALE PRESETS</div>
 <div class="inlineControls scalePresetControls">
 <div><label>ROOT</label><select id="presetScaleRoot"></select></div>
@@ -228,7 +228,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <div class="controls" style="grid-template-columns:150px 170px 130px 120px auto"><div><label>PROGRESSION BPM</label><input id="progBpm" type="number" min="30" max="240" value="80"></div><div><label>PLAY MODE</label><select id="progPlayMode"><option value="block" selected>BLOCK</option><option value="up">ARP ↑</option><option value="down">ARP ↓</option><option value="updown">ARP ↑↓</option></select></div><div><label>ARP RATE</label><select id="arpRate"><option value="1">1/4</option><option value="0.5" selected>1/8</option><option value="0.25">1/16</option></select></div><div><label>LOOP</label><select id="progLoop"><option value="off" selected>OFF</option><option value="on">ON</option></select></div><button id="newProgression">＋ NEW PROGRESSION</button></div>
 <div id="progressions" class="progressions"></div>
 </section>
-</main><div class="versionBadge">TONAL MAGIC v2.37 PWA</div>
+</main><div class="versionBadge">TONAL MAGIC v2.38 PWA</div>
 <script>
 const LATIN={A:["C3",48],B:["C#3",49],C:["D3",50],D:["D#3",51],E:["E3",52],F:["F3",53],G:["F#3",54],H:["G3",55],I:["G#3",56],J:["A3",57],K:["A#3",58],L:["B3",59],M:["C4",60],N:["C#4",61],O:["D4",62],P:["D#4",63],Q:["E4",64],R:["F4",65],S:["F#4",66],T:["G4",67],U:["A4",69],V:["A4",69],W:["A4",69],X:["G#4",68],Y:["A#4",70],Z:["B4",71]};
 const GREEK={Α:["C3",48],Β:["C#3",49],Γ:["D3",50],Δ:["D#3",51],Ε:["E3",52],Ζ:["F3",53],Η:["F#3",54],Θ:["G3",55],Ι:["G#3",56],Κ:["A3",57],Λ:["A#3",58],Μ:["B3",59],Ν:["C4",60],Ξ:["C#4",61],Ο:["D4",62],Π:["D#4",63],Ρ:["E4",64],Σ:["F4",65],Τ:["F#4",66],Υ:["G4",67],Φ:["G#4",68],Χ:["A4",69],Ψ:["A#4",70],Ω:["B4",71]};
