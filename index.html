@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.40</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.41</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -175,9 +175,9 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
  --tm-dark-panel:#0d0d0d;--tm-help:#aaa;
 }
 body[data-theme="ivory"]{--bg:#f3efe4;--panel:#fffaf0;--line:#cbbfab;--text:#342f29;--muted:#6d6255;--tm-input:#fffdf8;--tm-control:#ebe1d0;--tm-control-line:#b8a88e;--tm-button:#514435;--tm-button-text:#fff8e8;--tm-accent:#907650;--tm-accent-text:#fff9ed;--tm-card:#f6f0e4;--tm-card2:#ebe5db;--tm-card-line:#b7aa99;--tm-goldcard:#e6d6bb;--tm-goldline:#97784c;--tm-strong:#765426;--tm-soft:#625b52;--tm-active:#91724b;--tm-dark-panel:#eee6d8;--tm-help:#686056;--origin:#a94840}
-body[data-theme="sol"]{--bg:#493322;--panel:#6a4b30;--line:#b58b5f;--text:#fff0d3;--muted:#e0c8a6;--tm-input:#392719;--tm-control:#765539;--tm-control-line:#c6a16a;--tm-button:#f2cb83;--tm-button-text:#30200f;--tm-accent:#f2cb83;--tm-accent-text:#30200f;--tm-card:#503923;--tm-card2:#61442d;--tm-card-line:#bc9569;--tm-goldcard:#704d2e;--tm-goldline:#d5a965;--tm-strong:#ffdea0;--tm-soft:#f6dfb9;--tm-active:#f2cb83;--tm-dark-panel:#42301f;--tm-help:#f0dabb}
+body[data-theme="sol"]{--bg:#0a100d;--panel:#101813;--line:#725025;--text:#f2bb69;--muted:#b99565;--tm-input:#0b140e;--tm-control:#19271e;--tm-control-line:#87612b;--tm-button:#dc8a25;--tm-button-text:#14120b;--tm-accent:#ffb43e;--tm-accent-text:#14120b;--tm-card:#142019;--tm-card2:#18261e;--tm-card-line:#87612b;--tm-goldcard:#252215;--tm-goldline:#b57a27;--tm-strong:#ffc15c;--tm-soft:#e7a54b;--tm-active:#ffb000;--tm-dark-panel:#101710;--tm-help:#c99a62;--origin:#ff7049}
 body[data-theme="luna"]{--bg:#202630;--panel:#2b3442;--line:#586779;--text:#e3e9f3;--muted:#abb9ce;--tm-input:#1d2531;--tm-control:#38465a;--tm-control-line:#6b7d94;--tm-button:#a7b7cc;--tm-button-text:#172132;--tm-accent:#b4c9e4;--tm-accent-text:#172132;--tm-card:#252f3d;--tm-card2:#344052;--tm-card-line:#7c90a6;--tm-goldcard:#39475a;--tm-goldline:#8499b4;--tm-strong:#d0e0f4;--tm-soft:#b4c8df;--tm-active:#a7b7cc;--tm-dark-panel:#232c39;--tm-help:#c0ccdc;--origin:#db8c81}
-body[data-theme="techno"]{--bg:#0a100d;--panel:#101813;--line:#725025;--text:#f2bb69;--muted:#b99565;--tm-input:#0b140e;--tm-control:#19271e;--tm-control-line:#87612b;--tm-button:#dc8a25;--tm-button-text:#14120b;--tm-accent:#ffb43e;--tm-accent-text:#14120b;--tm-card:#142019;--tm-card2:#18261e;--tm-card-line:#87612b;--tm-goldcard:#252215;--tm-goldline:#b57a27;--tm-strong:#ffc15c;--tm-soft:#e7a54b;--tm-active:#ffb000;--tm-dark-panel:#101710;--tm-help:#c99a62;--origin:#ff7049}
+body[data-theme="techno"]{--bg:#f4f3ee;--panel:#fffefa;--line:#161616;--text:#111111;--muted:#4c4c4b;--origin:#ee3029;--tm-input:#ffffff;--tm-control:#f4f3ee;--tm-control-line:#111111;--tm-button:#111111;--tm-button-text:#ffffff;--tm-accent:#ee3029;--tm-accent-text:#ffffff;--tm-card:#fffefa;--tm-card2:#f4f3ee;--tm-card-line:#121212;--tm-goldcard:#ffefeb;--tm-goldline:#e1322c;--tm-strong:#d5241e;--tm-soft:#303030;--tm-active:#ee3029;--tm-dark-panel:#ffffff;--tm-help:#4e4e4c}
 body{background:var(--bg);color:var(--text)}
 textarea,select,input{background:var(--tm-input);color:var(--text);border-color:var(--line)}
 button{background:var(--tm-button);color:var(--tm-button-text)}
@@ -225,6 +225,53 @@ body[data-theme="ivory"] .key:not(.selected){opacity:1}
 .tm-license{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
 body[data-theme="ivory"] .tm-modal::backdrop{background:rgba(25,20,12,.6)}
 @media(max-width:700px){.tm-header{margin:8px auto 10px;padding:11px;border-radius:9px}.tm-title-row h1{font-size:23px}.tm-subtitle{font-size:11px}.tm-header-actions select{min-width:115px;font-size:12px}.tm-header-actions button{font-size:12px}.tm-modal-inner{padding:19px}}
+
+/* Techno / B-2 study: typography, hard geometry, geometric red as a signal. */
+body[data-theme="techno"]{font-family:"Arial Narrow","Helvetica Neue",Arial,system-ui,sans-serif}
+body[data-theme="techno"] .tm-header{background:#f4f3ee;border:0;border-bottom:5px solid #111;border-radius:0;padding:25px 20px 18px;position:relative}
+body[data-theme="techno"] .tm-header::before{content:"";position:absolute;width:17px;height:17px;right:18px;top:13px;background:#ee3029;transform:rotate(-18deg)}
+body[data-theme="techno"] .tm-title-row h1{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.17em;color:#090909}
+body[data-theme="techno"] .tm-version{color:#dd2822;font-family:monospace;font-weight:700}
+body[data-theme="techno"] .tm-subtitle{text-transform:uppercase;letter-spacing:.2em;font-size:10px;color:#292929;font-weight:700}
+body[data-theme="techno"] .tm-header-actions label{color:#111;font-family:monospace;font-weight:700;letter-spacing:.1em}
+body[data-theme="techno"] button,body[data-theme="techno"] select,body[data-theme="techno"] input,body[data-theme="techno"] textarea{border-radius:1px}
+body[data-theme="techno"] button{font-weight:700;letter-spacing:.025em}
+body[data-theme="techno"] button.secondary{border:1px solid #111}
+body[data-theme="techno"] .tm-header-actions #tmAboutOpen{border-radius:50%;height:45px;min-width:45px;background:#ee3029;color:#fff;border:0;padding:6px;font-size:11px}
+body[data-theme="techno"] .projectbar{border:2px solid #101010;border-radius:0;background:#0e0e0e;color:#fff;position:relative}
+body[data-theme="techno"] .projectbar::before{content:"PROJECT / 01";position:absolute;right:12px;top:-1px;padding:5px 7px;background:#ee3029;color:#fff;font:700 9px monospace;letter-spacing:.08em}
+body[data-theme="techno"] .projectbar label{color:#eee}
+body[data-theme="techno"] .projectbar input{background:#fff;color:#111;border:1px solid #fff}
+body[data-theme="techno"] .projectbar button.secondary{background:#f4f3ee;color:#111;border-color:#aaa}
+body[data-theme="techno"] .projectbar #newProject{background:#ee3029;color:#fff;border-color:#ee3029}
+body[data-theme="techno"] .projectbar .sectiontab.active{background:#ee3029;color:#fff;border-color:#ee3029}
+body[data-theme="techno"] .panel{border:2px solid #111;border-radius:0;box-shadow:6px 6px 0 #ddd9d2}
+body[data-theme="techno"] .panel:nth-of-type(2){background:#f1f0eb;border-left:9px solid #ee3029}
+body[data-theme="techno"] .panel:nth-of-type(3){background:#111;color:#fff;border-color:#111}
+body[data-theme="techno"] .panel:nth-of-type(3) .sectionTitle,body[data-theme="techno"] .panel:nth-of-type(3) .small{color:#fff}
+body[data-theme="techno"] .panel:nth-of-type(3) button.secondary{color:#111;background:#fff;border:1px solid #fff}
+body[data-theme="techno"] .panel:nth-of-type(3) .scaleList .pill{background:#fff;color:#111;border:1px solid #fff}
+body[data-theme="techno"] .sectionTitle{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.13em;font-size:17px}
+body[data-theme="techno"] .sectionTitle::before{content:"■";font-size:12px;color:#ee3029;margin-right:9px;vertical-align:1px}
+body[data-theme="techno"] .key.selected.white{background:#ef342e;color:#fff;box-shadow:inset 0 0 0 2px #111}
+body[data-theme="techno"] .key.selected.black{background:#ee3029;color:#fff;box-shadow:inset 0 0 0 2px #111}
+body[data-theme="techno"] .key.origin:after{background:#ee3029}
+body[data-theme="techno"] .key.selected.origin:after{background:#fff}
+body[data-theme="techno"] .chord.favorite{background:#ee3029;outline-color:#111;color:#fff}
+body[data-theme="techno"] .chord.favorite strong,body[data-theme="techno"] .chord.favorite .notes{color:#fff}
+body[data-theme="techno"] .chord.named strong{color:#d5241e}
+body[data-theme="techno"] .chord,.miniChord,.mapCell,.hslot,.cell{border-radius:0}
+body[data-theme="techno"] .hslot.active,body[data-theme="techno"] .miniChord.selectedCard{outline:3px solid #ee3029}
+body[data-theme="techno"] .mapCell.wordActive{background:#ffeeea;border-color:#ee3029}
+body[data-theme="techno"] .mapLetter.active{color:#d5241e;text-shadow:none}
+body[data-theme="techno"] .tm-modal{background:#f4f3ee;border:4px solid #111;border-radius:0;box-shadow:13px 13px 0 #ee3029}
+body[data-theme="techno"] .tm-about-title{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.16em}
+body[data-theme="techno"] .tm-app-icon{border-radius:0;border:2px solid #111}
+body[data-theme="techno"] .tm-modal a{color:#c3211b}
+body[data-theme="techno"] .tm-modal::backdrop{background:rgba(0,0,0,.8)}
+body[data-theme="techno"] .tm-close{background:#ee3029;color:#fff;border:0;border-radius:50%;width:35px;height:35px}
+@media(max-width:700px){body[data-theme="techno"] .tm-header{padding:15px 11px}body[data-theme="techno"] .tm-title-row h1{letter-spacing:.1em;font-size:22px}body[data-theme="techno"] .projectbar::before{font-size:7px}body[data-theme="techno"] .panel{box-shadow:3px 3px 0 #ddd9d2}}
+
 </style></head>
 <body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">Techno</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
@@ -599,9 +646,9 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.40";
+  const TM_VERSION="2.41";
   const themes=["nocturne","ivory","sol","luna","techno"];
-  const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#241c14",luna:"#202630",techno:"#0a100d"};
+  const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
   const themeSelect=document.getElementById("tmTheme");
   const dialog=document.getElementById("tmAbout");
