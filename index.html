@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.42</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.43</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -284,6 +284,21 @@ body[data-theme="techno"] .chord.omitted.favorite{background:#ee3029;color:#fff}
 body[data-theme="techno"] .chord.omitted.favorite strong,body[data-theme="techno"] .chord.omitted.favorite .notes{color:#fff}
 body[data-theme="techno"] .chord.omitted.favorite .badge{color:#fff;border-color:#fff}
 body[data-theme="techno"] .chord.omitted.favorite button{background:#fff;color:#111}
+
+/* v2.43 — legible omitted-tone chords in Ivory (B-2 uses its own contrast rules). */
+body[data-theme="ivory"] .chord.omitted{
+  background:#e8e1d5;
+  color:#342f29;
+  border:1px solid #9f917d;
+}
+body[data-theme="ivory"] .chord.omitted strong{color:#59442c}
+body[data-theme="ivory"] .chord.omitted .notes{color:#5d554b}
+body[data-theme="ivory"] .chord.omitted .badge{color:#554a3e;border-color:#9f917d;opacity:1}
+body[data-theme="ivory"] .chord.omitted button{background:#fffaf0;color:#342f29;border:1px solid #a99b88}
+body[data-theme="ivory"] .chord.omitted.favorite{background:var(--tm-accent);color:var(--tm-accent-text);border-color:#735a3c}
+body[data-theme="ivory"] .chord.omitted.favorite strong,
+body[data-theme="ivory"] .chord.omitted.favorite .notes,
+body[data-theme="ivory"] .chord.omitted.favorite .badge{color:var(--tm-accent-text)}
 </style></head>
 <body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
@@ -658,7 +673,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.42";
+  const TM_VERSION="2.43";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
