@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Scale & Chord Workbench v2.30 PWA</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.47</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -164,9 +164,220 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 }
 
 .wordLabelRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}.wordLabelRow label{margin:0}.wordLabelRow button{padding:5px 10px;font-size:11px}.wordPresetControls{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.wordPresetControls select{flex:1;min-width:145px}.wordPresetControls button{padding:7px 9px;font-size:11px}.wordPresetControls+ .small{margin-top:5px}
+
+/* TONAL MAGIC v2.39 — application chrome and five independent visual themes */
+:root{
+ --tm-input:#0e0e0e;--tm-control:#292929;--tm-control-line:#444;
+ --tm-button:#eee;--tm-button-text:#111;--tm-accent:#d9a65d;
+ --tm-accent-text:#17120c;--tm-card:#111;--tm-card2:#171a1d;
+ --tm-card-line:#3d4650;--tm-goldcard:#2b2114;--tm-goldline:#9b6b32;
+ --tm-strong:#e2b56f;--tm-soft:#b9c2cc;--tm-active:#d9a65d;
+ --tm-dark-panel:#0d0d0d;--tm-help:#aaa;
+}
+body[data-theme="ivory"]{--bg:#f3efe4;--panel:#fffaf0;--line:#cbbfab;--text:#342f29;--muted:#6d6255;--tm-input:#fffdf8;--tm-control:#ebe1d0;--tm-control-line:#b8a88e;--tm-button:#514435;--tm-button-text:#fff8e8;--tm-accent:#907650;--tm-accent-text:#fff9ed;--tm-card:#f6f0e4;--tm-card2:#ebe5db;--tm-card-line:#b7aa99;--tm-goldcard:#e6d6bb;--tm-goldline:#97784c;--tm-strong:#765426;--tm-soft:#625b52;--tm-active:#91724b;--tm-dark-panel:#eee6d8;--tm-help:#686056;--origin:#a94840}
+body[data-theme="sol"]{--bg:#0a100d;--panel:#101813;--line:#725025;--text:#f2bb69;--muted:#b99565;--tm-input:#0b140e;--tm-control:#19271e;--tm-control-line:#87612b;--tm-button:#dc8a25;--tm-button-text:#14120b;--tm-accent:#ffb43e;--tm-accent-text:#14120b;--tm-card:#142019;--tm-card2:#18261e;--tm-card-line:#87612b;--tm-goldcard:#252215;--tm-goldline:#b57a27;--tm-strong:#ffc15c;--tm-soft:#e7a54b;--tm-active:#ffb000;--tm-dark-panel:#101710;--tm-help:#c99a62;--origin:#ff7049}
+body[data-theme="luna"]{--bg:#202630;--panel:#2b3442;--line:#586779;--text:#e3e9f3;--muted:#abb9ce;--tm-input:#1d2531;--tm-control:#38465a;--tm-control-line:#6b7d94;--tm-button:#a7b7cc;--tm-button-text:#172132;--tm-accent:#b4c9e4;--tm-accent-text:#172132;--tm-card:#252f3d;--tm-card2:#344052;--tm-card-line:#7c90a6;--tm-goldcard:#39475a;--tm-goldline:#8499b4;--tm-strong:#d0e0f4;--tm-soft:#b4c8df;--tm-active:#a7b7cc;--tm-dark-panel:#232c39;--tm-help:#c0ccdc;--origin:#db8c81}
+body[data-theme="techno"]{--bg:#f4f3ee;--panel:#fffefa;--line:#161616;--text:#111111;--muted:#4c4c4b;--origin:#ee3029;--tm-input:#ffffff;--tm-control:#f4f3ee;--tm-control-line:#111111;--tm-button:#111111;--tm-button-text:#ffffff;--tm-accent:#ee3029;--tm-accent-text:#ffffff;--tm-card:#fffefa;--tm-card2:#f4f3ee;--tm-card-line:#121212;--tm-goldcard:#ffefeb;--tm-goldline:#e1322c;--tm-strong:#d5241e;--tm-soft:#303030;--tm-active:#ee3029;--tm-dark-panel:#ffffff;--tm-help:#4e4e4c}
+body{background:var(--bg);color:var(--text)}
+textarea,select,input{background:var(--tm-input);color:var(--text);border-color:var(--line)}
+button{background:var(--tm-button);color:var(--tm-button-text)}
+button.secondary{background:var(--tm-control);color:var(--text);border-color:var(--tm-control-line)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--tm-accent);outline-offset:2px}
+.panel{background:var(--panel);border-color:var(--line)}
+.projectbar{background:var(--tm-dark-panel);border-color:var(--line)}
+.cell,.numberCell,.prog,.hslot{background:var(--tm-card);border-color:var(--line)}
+.pill,.mapCell{background:var(--tm-card);border-color:var(--line);color:var(--text)}
+.chord,.miniChord{background:var(--tm-card2);border-color:var(--tm-card-line);color:var(--text)}
+.chord.named,.miniChord.named{background:var(--tm-goldcard);border-color:var(--tm-goldline)}
+.chord.named strong,.mapPitch,.numberCell .nvalue{color:var(--tm-strong)}
+.chord:not(.named) strong{color:var(--tm-soft)}
+.tabs button.active,.sectiontab.active{background:var(--tm-accent);color:var(--tm-accent-text)}
+.chord.favorite{outline-color:var(--tm-accent);background:var(--tm-accent);color:var(--tm-accent-text)}
+.chord.favorite strong,.chord.favorite .notes{color:var(--tm-accent-text)}
+.hslot.active,.miniChord.selectedCard{outline-color:var(--tm-accent)}
+.progPanel{background:var(--tm-card);border-color:var(--line)}
+.mapCell.wordActive{background:var(--tm-goldcard);border-color:var(--tm-goldline)}
+.mapLetter.active{color:var(--tm-strong)}
+.letter,.note,.progname,.prognotes,.originTag{color:inherit}
+.legends,.legend,.chord .notes,.hslot .pitch,.prognotes{color:var(--tm-help)}
+#advancedMapping{border-color:var(--tm-goldline)!important}
+#advancedMapping summary,#letterToneMap,.panel details summary{color:var(--tm-accent)!important}
+#availableRoot{color:var(--tm-accent)!important}
+body[data-theme="ivory"] .key:not(.selected){opacity:1}
+.tm-header{max-width:1120px;margin:18px auto 14px;padding:15px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.tm-header-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tm-identity{min-width:0}.tm-title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tm-title-row h1{font-size:27px;letter-spacing:.075em;margin:0}.tm-version{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.tm-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+.tm-header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tm-header-actions label{margin:0;font-size:11px}.tm-header-actions select{width:auto;min-width:128px;padding:8px 9px}
+.tm-header-actions button{padding:8px 13px}
+.tm-modal{border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);padding:0;max-width:min(440px,calc(100vw - 28px));width:100%;max-height:calc(100vh - 28px);overflow:auto;box-shadow:0 15px 60px #0009}
+.tm-modal::backdrop{background:rgba(0,0,0,.73)}
+.tm-modal-inner{padding:24px;text-align:center}
+.tm-close{float:right;margin:-8px -8px 4px 8px;font-size:20px;line-height:1}
+.tm-app-icon{display:block;width:100px;height:100px;margin:6px auto 15px;border-radius:20px;border:1px solid var(--line)}
+.tm-about-title{font:26px Georgia,serif;letter-spacing:.06em;margin:0}
+.tm-about-subtitle{margin:7px 0 19px;color:var(--muted);font-size:13px}
+.tm-credit,.tm-copy{margin:8px 0;font-size:13px}
+.tm-copy{color:var(--muted);font-size:12px}
+.tm-modal a{color:var(--tm-accent);text-underline-offset:3px}
+.tm-license{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
+body[data-theme="ivory"] .tm-modal::backdrop{background:rgba(25,20,12,.6)}
+@media(max-width:700px){.tm-header{margin:8px auto 10px;padding:11px;border-radius:9px}.tm-title-row h1{font-size:23px}.tm-subtitle{font-size:11px}.tm-header-actions select{min-width:115px;font-size:12px}.tm-header-actions button{font-size:12px}.tm-modal-inner{padding:19px}}
+
+/* Techno / B-2 study: typography, hard geometry, geometric red as a signal. */
+body[data-theme="techno"]{font-family:"Arial Narrow","Helvetica Neue",Arial,system-ui,sans-serif}
+body[data-theme="techno"] .tm-header{background:#f4f3ee;border:0;border-bottom:5px solid #111;border-radius:0;padding:25px 20px 18px;position:relative}
+body[data-theme="techno"] .tm-header::before{content:"";position:absolute;width:17px;height:17px;right:18px;top:13px;background:#ee3029;transform:rotate(-18deg)}
+body[data-theme="techno"] .tm-title-row h1{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.17em;color:#090909}
+body[data-theme="techno"] .tm-version{color:#dd2822;font-family:monospace;font-weight:700}
+body[data-theme="techno"] .tm-subtitle{text-transform:uppercase;letter-spacing:.2em;font-size:10px;color:#292929;font-weight:700}
+body[data-theme="techno"] .tm-header-actions label{color:#111;font-family:monospace;font-weight:700;letter-spacing:.1em}
+body[data-theme="techno"] button,body[data-theme="techno"] select,body[data-theme="techno"] input,body[data-theme="techno"] textarea{border-radius:1px}
+body[data-theme="techno"] button{font-weight:700;letter-spacing:.025em}
+body[data-theme="techno"] button.secondary{border:1px solid #111}
+body[data-theme="techno"] .tm-header-actions #tmAboutOpen{border-radius:50%;height:45px;min-width:45px;background:#ee3029;color:#fff;border:0;padding:6px;font-size:11px}
+body[data-theme="techno"] .projectbar{border:2px solid #101010;border-radius:0;background:#0e0e0e;color:#fff;position:relative}
+body[data-theme="techno"] .projectbar::before{content:"PROJECT / 01";position:absolute;right:12px;top:-1px;padding:5px 7px;background:#ee3029;color:#fff;font:700 9px monospace;letter-spacing:.08em}
+body[data-theme="techno"] .projectbar label{color:#eee}
+body[data-theme="techno"] .projectbar input{background:#fff;color:#111;border:1px solid #fff}
+body[data-theme="techno"] .projectbar button.secondary{background:#f4f3ee;color:#111;border-color:#aaa}
+body[data-theme="techno"] .projectbar #newProject{background:#ee3029;color:#fff;border-color:#ee3029}
+body[data-theme="techno"] .projectbar .sectiontab.active{background:#ee3029;color:#fff;border-color:#ee3029}
+body[data-theme="techno"] .panel{border:2px solid #111;border-radius:0;box-shadow:6px 6px 0 #ddd9d2}
+body[data-theme="techno"] .panel:nth-of-type(2){background:#f1f0eb;border-left:9px solid #ee3029}
+body[data-theme="techno"] .panel:nth-of-type(3){background:#111;color:#fff;border-color:#111}
+body[data-theme="techno"] .panel:nth-of-type(3) .sectionTitle,body[data-theme="techno"] .panel:nth-of-type(3) .small{color:#fff}
+body[data-theme="techno"] .panel:nth-of-type(3) button.secondary{color:#111;background:#fff;border:1px solid #fff}
+body[data-theme="techno"] .panel:nth-of-type(3) .scaleList .pill{background:#fff;color:#111;border:1px solid #fff}
+body[data-theme="techno"] .sectionTitle{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.13em;font-size:17px}
+body[data-theme="techno"] .sectionTitle::before{content:"■";font-size:12px;color:#ee3029;margin-right:9px;vertical-align:1px}
+body[data-theme="techno"] .key.selected.white{background:#ef342e;color:#fff;box-shadow:inset 0 0 0 2px #111}
+body[data-theme="techno"] .key.selected.black{background:#ee3029;color:#fff;box-shadow:inset 0 0 0 2px #111}
+body[data-theme="techno"] .key.origin:after{background:#ee3029}
+body[data-theme="techno"] .key.selected.origin:after{background:#fff}
+body[data-theme="techno"] .chord.favorite{background:#ee3029;outline-color:#111;color:#fff}
+body[data-theme="techno"] .chord.favorite strong,body[data-theme="techno"] .chord.favorite .notes{color:#fff}
+body[data-theme="techno"] .chord.named strong{color:#d5241e}
+body[data-theme="techno"] .chord,.miniChord,.mapCell,.hslot,.cell{border-radius:0}
+body[data-theme="techno"] .hslot.active,body[data-theme="techno"] .miniChord.selectedCard{outline:3px solid #ee3029}
+body[data-theme="techno"] .mapCell.wordActive{background:#ffeeea;border-color:#ee3029}
+body[data-theme="techno"] .mapLetter.active{color:#d5241e;text-shadow:none}
+body[data-theme="techno"] .tm-modal{background:#f4f3ee;border:4px solid #111;border-radius:0;box-shadow:13px 13px 0 #ee3029}
+body[data-theme="techno"] .tm-about-title{font-family:Arial,Helvetica,sans-serif;font-weight:900;letter-spacing:.16em}
+body[data-theme="techno"] .tm-app-icon{border-radius:0;border:2px solid #111}
+body[data-theme="techno"] .tm-modal a{color:#c3211b}
+body[data-theme="techno"] .tm-modal::backdrop{background:rgba(0,0,0,.8)}
+body[data-theme="techno"] .tm-close{background:#ee3029;color:#fff;border:0;border-radius:50%;width:35px;height:35px}
+@media(max-width:700px){body[data-theme="techno"] .tm-header{padding:15px 11px}body[data-theme="techno"] .tm-title-row h1{letter-spacing:.1em;font-size:22px}body[data-theme="techno"] .projectbar::before{font-size:7px}body[data-theme="techno"] .panel{box-shadow:3px 3px 0 #ddd9d2}}
+
+
+/* B-2 / v2.42: omitted cards must remain legible in the light theme. */
+body[data-theme="techno"] .chord.omitted{background:#dedbd4;color:#111;border:2px solid #111}
+body[data-theme="techno"] .chord.omitted strong{color:#111}
+body[data-theme="techno"] .chord.omitted .notes{color:#3f3f3e}
+body[data-theme="techno"] .chord.omitted .badge{color:#111;border-color:#666;opacity:1}
+body[data-theme="techno"] .chord.omitted button{background:#fff;color:#111;border:1px solid #111}
+body[data-theme="techno"] .chord.omitted button:hover{background:#ee3029;color:#fff}
+body[data-theme="techno"] .chord.omitted.favorite{background:#ee3029;color:#fff}
+body[data-theme="techno"] .chord.omitted.favorite strong,body[data-theme="techno"] .chord.omitted.favorite .notes{color:#fff}
+body[data-theme="techno"] .chord.omitted.favorite .badge{color:#fff;border-color:#fff}
+body[data-theme="techno"] .chord.omitted.favorite button{background:#fff;color:#111}
+
+/* v2.43 — legible omitted-tone chords in Ivory (B-2 uses its own contrast rules). */
+body[data-theme="ivory"] .chord.omitted{
+  background:#e8e1d5;
+  color:#342f29;
+  border:1px solid #9f917d;
+}
+body[data-theme="ivory"] .chord.omitted strong{color:#59442c}
+body[data-theme="ivory"] .chord.omitted .notes{color:#5d554b}
+body[data-theme="ivory"] .chord.omitted .badge{color:#554a3e;border-color:#9f917d;opacity:1}
+body[data-theme="ivory"] .chord.omitted button{background:#fffaf0;color:#342f29;border:1px solid #a99b88}
+body[data-theme="ivory"] .chord.omitted.favorite{background:var(--tm-accent);color:var(--tm-accent-text);border-color:#735a3c}
+body[data-theme="ivory"] .chord.omitted.favorite strong,
+body[data-theme="ivory"] .chord.omitted.favorite .notes,
+body[data-theme="ivory"] .chord.omitted.favorite .badge{color:var(--tm-accent-text)}
+
+/* v2.46 — B-2 instrument controls; other themes keep native controls. */
+.tm-dial{display:none}
+body[data-theme="techno"] .grid>div:not(.text)>label{min-height:30px;line-height:1.25;display:flex;align-items:end}
+body[data-theme="techno"] .grid{align-items:start}
+body[data-theme="techno"] .tm-dial{display:flex;flex-direction:column;align-items:center;gap:5px;width:max-content;max-width:100%;margin:4px auto 8px;user-select:none}
+body[data-theme="techno"] .tm-dial-source{display:none!important}
+body[data-theme="techno"] .tm-knob{width:110px;height:110px;position:relative;touch-action:none;cursor:grab;outline-offset:3px}
+body[data-theme="techno"] .tm-knob:active{cursor:grabbing}
+body[data-theme="techno"] .tm-knob svg{width:100%;height:100%;display:block;pointer-events:none}
+body[data-theme="techno"] .tm-knob-value{position:absolute;left:27%;top:39%;width:46%;height:22%;font:700 20px/1 Arial,sans-serif;text-align:center;border:0!important;border-radius:0!important;background:transparent!important;color:#fff!important;padding:0!important;appearance:textfield;cursor:text;z-index:2;touch-action:auto}
+body[data-theme="techno"] .tm-knob-value::-webkit-inner-spin-button,body[data-theme="techno"] .tm-knob-value::-webkit-outer-spin-button{appearance:none;margin:0}
+body[data-theme="techno"] .tm-dial-range{font:700 9px/1.2 monospace;letter-spacing:.04em;color:#444;text-align:center}
+body[data-theme="techno"] .tm-note-dial{position:relative;width:166px;height:166px;max-width:none}
+body[data-theme="techno"] .tm-note-disc{position:absolute;inset:53px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font:700 19px Arial,sans-serif;pointer-events:none}
+body[data-theme="techno"] .tm-note-ring{position:absolute;inset:5px;border:1px solid #222;border-radius:50%;pointer-events:none}
+body[data-theme="techno"] .tm-note-tick{position:absolute;left:calc(50% - 1px);top:4px;width:2px;height:8px;background:#444;transform-origin:1px 79px;pointer-events:none}
+body[data-theme="techno"] .tm-note-tick.selected{background:#ed3029;width:4px;left:calc(50% - 2px)}
+body[data-theme="techno"] .tm-note-choice{position:absolute;width:31px;height:27px;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);border:0;background:transparent;color:#111;font:700 11px Arial,sans-serif;letter-spacing:-.03em;padding:0;cursor:pointer;border-radius:50%}
+body[data-theme="techno"] .tm-note-choice.selected{background:#ee3029;color:#fff}
+body[data-theme="techno"] .tm-note-choice:focus-visible{outline:2px solid #111;outline-offset:2px}
+body[data-theme="techno"] .scalePresetControls{align-items:flex-start;gap:14px}
+body[data-theme="techno"] .scalePresetControls>div:first-child{flex:0 0 174px;min-width:0}
+body[data-theme="techno"] .controls:has(#startNote){align-items:start}
+body[data-theme="techno"] .controls:has(#startNote)>div:first-child{min-width:168px}
+body[data-theme="techno"] #sketchbook>.controls{align-items:start}
+body[data-theme="techno"] #sketchbook>.controls>div:first-child{min-width:0}
+@media(max-width:700px){
+body[data-theme="techno"] .tm-knob{width:95px;height:95px}
+body[data-theme="techno"] .tm-knob-value{font-size:17px}
+body[data-theme="techno"] .tm-note-dial{width:146px;height:146px}
+body[data-theme="techno"] .tm-note-disc{inset:46px;font-size:16px}
+body[data-theme="techno"] .tm-note-tick{transform-origin:1px 69px}
+body[data-theme="techno"] .tm-note-choice{width:28px;height:25px;font-size:10px}
+body[data-theme="techno"] .scalePresetControls>div:first-child{flex-basis:154px}
+body[data-theme="techno"] .controls:has(#startNote)>div:first-child{min-width:0}
+}
+
+/* v2.46 — compact B-2 dials; keep twelve discrete clickable note positions. */
+body[data-theme="techno"] .tm-note-dial{width:124px;height:124px;margin:2px auto 4px}
+body[data-theme="techno"] .tm-note-ring{inset:4px}
+body[data-theme="techno"] .tm-note-tick{top:3px;height:6px;transform-origin:1px 59px}
+body[data-theme="techno"] .tm-note-disc{inset:40px;font-size:15px}
+body[data-theme="techno"] .tm-note-choice{width:25px;height:23px;font-size:9px}
+body[data-theme="techno"] .scalePresetControls{align-items:flex-start;gap:10px;justify-content:flex-start}
+body[data-theme="techno"] .scalePresetControls>div:first-child{flex:0 0 132px;min-width:0}
+body[data-theme="techno"] .scalePresetControls>div:nth-child(2){flex:0 1 190px;min-width:135px}
+body[data-theme="techno"] .scalePresetControls>button{flex:0 0 auto;width:auto;align-self:flex-start;white-space:nowrap}
+body[data-theme="techno"] .controls:has(#startNote){grid-template-columns:140px 150px 170px max-content;gap:10px;align-items:start;justify-content:start}
+body[data-theme="techno"] .controls:has(#startNote)>div:first-child{min-width:0}
+body[data-theme="techno"] .controls:has(#startNote)>button{width:auto;grid-column:auto;align-self:start;white-space:nowrap}
+@media(max-width:700px){
+  body[data-theme="techno"] .tm-note-dial{width:132px;height:132px}
+  body[data-theme="techno"] .tm-note-tick{transform-origin:1px 63px}
+  body[data-theme="techno"] .tm-note-disc{inset:43px;font-size:15px}
+  body[data-theme="techno"] .tm-note-choice{width:27px;height:24px;font-size:10px}
+  body[data-theme="techno"] .scalePresetControls>div:first-child{flex-basis:140px}
+  body[data-theme="techno"] .controls:has(#startNote){grid-template-columns:140px minmax(110px,1fr);gap:9px}
+  body[data-theme="techno"] .controls:has(#startNote)>button{grid-column:auto;width:max-content;max-width:100%}
+}
+@media(max-width:380px){
+  body[data-theme="techno"] .controls:has(#startNote){grid-template-columns:1fr 1fr}
+  body[data-theme="techno"] .controls:has(#startNote)>div:first-child{grid-column:1/-1}
+}
+
+/* v2.47 — Center action buttons vertically on their 12-note dials.
+   The surrounding dropdowns remain at their existing top positions. */
+body[data-theme="techno"] .scalePresetControls>#loadScalePreset,
+body[data-theme="techno"] .controls:has(#startNote)>#playScale{
+  margin-top:62px;
+  align-self:start;
+}
+@media(max-width:700px){
+  body[data-theme="techno"] .scalePresetControls>#loadScalePreset,
+  body[data-theme="techno"] .controls:has(#startNote)>#playScale{margin-top:65px}
+}
 </style></head>
-<body><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
-<h1>TONAL MAGIC</h1><div class="subtitle">Letter-Tone → Pitch Collection → Scale → Chord Workbench</div>
+<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
+
 
 <section class="panel">
 <div class="grid">
@@ -228,7 +439,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <div class="controls" style="grid-template-columns:150px 170px 130px 120px auto"><div><label>PROGRESSION BPM</label><input id="progBpm" type="number" min="30" max="240" value="80"></div><div><label>PLAY MODE</label><select id="progPlayMode"><option value="block" selected>BLOCK</option><option value="up">ARP ↑</option><option value="down">ARP ↓</option><option value="updown">ARP ↑↓</option></select></div><div><label>ARP RATE</label><select id="arpRate"><option value="1">1/4</option><option value="0.5" selected>1/8</option><option value="0.25">1/16</option></select></div><div><label>LOOP</label><select id="progLoop"><option value="off" selected>OFF</option><option value="on">ON</option></select></div><button id="newProgression">＋ NEW PROGRESSION</button></div>
 <div id="progressions" class="progressions"></div>
 </section>
-</main><div class="versionBadge">TONAL MAGIC v2.38 PWA</div>
+</main><dialog id="tmAbout" class="tm-modal" aria-labelledby="tmAboutTitle"><div class="tm-modal-inner"><button type="button" class="secondary tm-close" id="tmAboutClose" aria-label="Close About">×</button><img class="tm-app-icon" src="icon-192.png" alt="TONAL MAGIC icon"><h2 class="tm-about-title" id="tmAboutTitle">TONAL MAGIC</h2><p class="tm-about-subtitle">Letter-Tone Generator</p><p class="tm-credit">Created by <a href="https://majyutsudo.wpcomstaging.com/" target="_blank" rel="noopener noreferrer">Majyutsudo</a></p><p class="tm-copy" id="tmAboutVersion"></p><p class="tm-copy">© 2026 Majyutsudo</p><div class="tm-license"><a href="https://github.com/majyutsudo/tonal-magic/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer" id="tmLicenseLink">License &amp; Disclaimer</a></div></div></dialog>
 <script>
 const LATIN={A:["C3",48],B:["C#3",49],C:["D3",50],D:["D#3",51],E:["E3",52],F:["F3",53],G:["F#3",54],H:["G3",55],I:["G#3",56],J:["A3",57],K:["A#3",58],L:["B3",59],M:["C4",60],N:["C#4",61],O:["D4",62],P:["D#4",63],Q:["E4",64],R:["F4",65],S:["F#4",66],T:["G4",67],U:["A4",69],V:["A4",69],W:["A4",69],X:["G#4",68],Y:["A#4",70],Z:["B4",71]};
 const GREEK={Α:["C3",48],Β:["C#3",49],Γ:["D3",50],Δ:["D#3",51],Ε:["E3",52],Ζ:["F3",53],Η:["F#3",54],Θ:["G3",55],Ι:["G#3",56],Κ:["A3",57],Λ:["A#3",58],Μ:["B3",59],Ν:["C4",60],Ξ:["C#4",61],Ο:["D4",62],Π:["D#4",63],Ρ:["E4",64],Σ:["F4",65],Τ:["F#4",66],Υ:["G4",67],Φ:["G#4",68],Χ:["A4",69],Ψ:["A#4",70],Ω:["B4",71]};
@@ -295,6 +506,17 @@ function addSection(){persistActiveSection();let i=sections.length;sections.push
 function duplicateCurrentSection(){persistActiveSection();let x=JSON.parse(JSON.stringify(sections[activeSection]));x.name+=" COPY";sections.splice(activeSection+1,0,x);restoreSection(activeSection+1)}
 function deleteCurrentSection(){if(sections.length<=1)return;sections.splice(activeSection,1);activeSection=Math.min(activeSection,sections.length-1);restoreSection(activeSection)}
 function projectObject(){persistActiveSection();return {format:"TONAL_MAGIC_PROJECT",version:1,name:projectName.value||"UNTITLED PROJECT",activeSection,sections,progressionBpm:+progBpm.value||80,progressionPlayMode:progPlayMode.value,arpRate:+arpRate.value||0.5,progressions:progressionsData,activeProgression}}
+function newProjectWorkspace(){
+  if(!confirm("Create a new project? Unsaved changes to the current project will be lost. Save your project first if needed."))return;
+  stopAll();
+  projectName.value="UNTITLED PROJECT";
+  progBpm.value="80";progPlayMode.value="block";arpRate.value="0.5";progLoop.value="off";
+  progressionsData=[];activeProgression=0;
+  sections=[makeSection("SECTION A","")];activeSection=0;
+  isRestoringSection=true;
+  restoreSection(0);
+  addProgressionObj("Progression A");
+}
 function downloadProject(){let o=projectObject(),blob=new Blob([JSON.stringify(o,null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=(o.name.replace(/[^a-z0-9_-]+/gi,"_")||"TONAL_MAGIC")+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function loadProjectObject(o){if(!o||o.format!=="TONAL_MAGIC_PROJECT"||!o.sections?.length)return;projectName.value=o.name||"UNTITLED PROJECT";sections=o.sections;progressionsData=o.progressions||[];activeProgression=Math.min(o.activeProgression||0,Math.max(0,progressionsData.length-1));progBpm.value=o.progressionBpm||80;progPlayMode.value=o.progressionPlayMode||"block";arpRate.value=String(o.arpRate||0.5);isRestoringSection=true;activeSection=Math.min(o.activeSection||0,sections.length-1);isRestoringSection=false;restoreSection(activeSection)}
 function rebuild(){let a=parse();origin=new Set(a.filter(x=>!x.space&&!x.mute).map(x=>pc(x.midi)));selected=new Set(origin);let first=a.find(x=>!x.space&&!x.mute);if(first)startNote.value=String(pc(first.midi));refreshStartNoteLabels();render(a);syncHarmSlots();persistActiveSection()}
@@ -513,7 +735,7 @@ all12.onclick=()=>{selected=new Set([...Array(12).keys()]);keys();collection.tex
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));renderChords()});
 showAllChords.onclick=()=>{chordView="all";showAllChords.classList.add("active");showFavChords.classList.remove("active");renderChords()};showFavChords.onclick=()=>{chordView="fav";showFavChords.classList.add("active");showAllChords.classList.remove("active");renderChords()};
 newProgression.onclick=()=>addProgressionObj();playHarm.onclick=playHarmFn;document.getElementById("stopHarm").onclick=stopAll;document.getElementById("addHarmSketch").onclick=addHarmonizationToSketchbook;copyHarm.onclick=()=>copyText(harmText());midiHarm.onclick=()=>exportChordListMidi(harmSlots.filter(x=>x.chord).map(x=>x.chord),+progBpm.value||80,"TONAL_MAGIC_harmonization.mid");clearHarm.onclick=()=>{harmSlots.forEach(x=>x.chord=null);renderHarm()};
-newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
+newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};document.getElementById("newProject").onclick=newProjectWorkspace;saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
 const scalesEl=document.getElementById("scales"),chordsEl=document.getElementById("chords");
 initializeScalePresets();
 addProgressionObj("Progression A");sections=[makeSection("SECTION A","LOVE THE EARTH")];activeSection=0;isRestoringSection=true;restoreSection(0);
@@ -522,5 +744,136 @@ addProgressionObj("Progression A");sections=[makeSection("SECTION A","LOVE THE E
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+</script>
+
+<script>
+/* App presentation is intentionally isolated from composition/project state. */
+(function(){
+  const TM_VERSION="2.47";
+  const themes=["nocturne","ivory","sol","luna","techno"];
+  const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
+  const storageKey="tonal-magic-ui-theme";
+  const themeSelect=document.getElementById("tmTheme");
+  const dialog=document.getElementById("tmAbout");
+  const versionLabel="v"+TM_VERSION;
+  document.title="TONAL MAGIC — Letter-Tone Generator "+versionLabel;
+  document.getElementById("tmHeaderVersion").textContent=versionLabel;
+  document.getElementById("tmAboutVersion").textContent="Version "+TM_VERSION;
+  function applyTheme(theme){
+    if(!themes.includes(theme))theme="nocturne";
+    document.body.dataset.theme=theme;
+    themeSelect.value=theme;
+    const meta=document.querySelector('meta[name="theme-color"]');
+    if(meta)meta.content=colors[theme];
+    try{localStorage.setItem(storageKey,theme)}catch(e){}
+  }
+  let preferred="nocturne";
+  try{preferred=localStorage.getItem(storageKey)||preferred}catch(e){}
+  applyTheme(preferred);
+  themeSelect.addEventListener("change",()=>applyTheme(themeSelect.value));
+  document.getElementById("tmAboutOpen").addEventListener("click",()=>dialog.showModal());
+  document.getElementById("tmAboutClose").addEventListener("click",()=>dialog.close());
+  dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close()});
+})();
+</script>
+
+<script>
+/* v2.46: B-2-only decorative-but-functional control layer. Source inputs remain canonical. */
+(function(){
+ const specs=[
+  {id:'bpm',kind:'bpm'},
+  {id:'progBpm',kind:'bpm'},
+  {id:'presetScaleRoot',kind:'note'},
+  {id:'startNote',kind:'note'}
+ ];
+ const notesSharp=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+ const notesFlat=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+ const instances=[];
+ const clamp=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
+ const fmtNote=(v)=>((document.getElementById('accidental')?.value==='flat')?notesFlat:notesSharp)[v];
+ function updateSource(input,value){
+  if(String(input.value)===String(value))return;
+  input.value=String(value);
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  input.dispatchEvent(new Event('change',{bubbles:true}));
+ }
+ function buildBpm(input){
+  const wrap=document.createElement('div');wrap.className='tm-dial tm-bpm-dial';
+  const knob=document.createElement('div');knob.className='tm-knob';knob.tabIndex=0;
+  knob.setAttribute('role','slider');knob.setAttribute('aria-label',(input.id==='progBpm'?'Progression BPM':'BPM'));
+  knob.setAttribute('aria-valuemin','30');knob.setAttribute('aria-valuemax','240');
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');svg.setAttribute('viewBox','0 0 120 120');
+  const circle=(r,fill,stroke,sw)=>{const e=document.createElementNS(svgNS,'circle');for(const [k,v] of Object.entries({cx:60,cy:60,r,fill,stroke,'stroke-width':sw}))e.setAttribute(k,v);svg.appendChild(e);return e};
+  circle(54,'none','#181818',1.5);
+  for(let i=0;i<=20;i++){
+   const ang=(-135+270*i/20)*Math.PI/180;const inner=i%5===0?43:47;
+   const line=document.createElementNS(svgNS,'line');
+   for(const [k,v] of Object.entries({x1:60+inner*Math.sin(ang),y1:60-inner*Math.cos(ang),x2:60+53*Math.sin(ang),y2:60-53*Math.cos(ang),stroke:i%5===0?'#111':'#777','stroke-width':i%5===0?2:1}))line.setAttribute(k,v);
+   svg.appendChild(line);
+  }
+  circle(40,'#141414','#111',2);
+  const pointer=document.createElementNS(svgNS,'line');
+  for(const [k,v] of Object.entries({x1:60,y1:25,x2:60,y2:36,stroke:'#ee3029','stroke-width':5,'stroke-linecap':'round'}))pointer.setAttribute(k,v);
+  svg.appendChild(pointer);knob.appendChild(svg);
+  const num=document.createElement('input');num.className='tm-knob-value';num.type='number';num.min=30;num.max=240;num.step=1;num.setAttribute('aria-label',(input.id==='progBpm'?'Progression BPM':'BPM')+' direct numeric entry');
+  knob.appendChild(num);wrap.appendChild(knob);
+  const range=document.createElement('div');range.className='tm-dial-range';range.textContent='30  —  240';wrap.appendChild(range);
+  const set=(v)=>updateSource(input,clamp(Math.round(Number(v)||30),30,240));
+  const sync=()=>{const value=clamp(Number(input.value)||80,30,240);num.value=String(value);pointer.setAttribute('transform',`rotate(${-135+(value-30)*270/210} 60 60)`);knob.setAttribute('aria-valuenow',String(value))};
+  num.addEventListener('change',()=>{set(num.value);sync()});
+  num.addEventListener('pointerdown',e=>e.stopPropagation());
+  knob.addEventListener('keydown',e=>{if(e.target!==knob)return;let step=e.shiftKey?10:1;let v=Number(input.value)||80;if(e.key==='ArrowUp'||e.key==='ArrowRight')v+=step;else if(e.key==='ArrowDown'||e.key==='ArrowLeft')v-=step;else if(e.key==='Home')v=30;else if(e.key==='End')v=240;else return;e.preventDefault();set(v);sync()});
+  let dragging=false;
+  const angleVal=(e)=>{const b=knob.getBoundingClientRect(),cx=b.left+b.width/2,cy=b.top+b.height/2,dx=e.clientX-cx,dy=cy-e.clientY;let deg=Math.atan2(dx,dy)*180/Math.PI;deg=clamp(deg,-135,135);return 30+Math.round((deg+135)/270*210)};
+  knob.addEventListener('pointerdown',e=>{if(e.target===num)return;dragging=true;knob.setPointerCapture(e.pointerId);set(angleVal(e));sync()});
+  knob.addEventListener('pointermove',e=>{if(!dragging)return;set(angleVal(e));sync()});
+  knob.addEventListener('pointerup',()=>dragging=false);
+  knob.addEventListener('pointercancel',()=>dragging=false);
+  input.insertAdjacentElement('afterend',wrap);input.classList.add('tm-dial-source');
+  input.addEventListener('input',sync);input.addEventListener('change',sync);
+  return sync;
+ }
+ function buildNote(input){
+  const wrap=document.createElement('div');wrap.className='tm-dial tm-note-dial';
+  const ring=document.createElement('div');ring.className='tm-note-ring';wrap.appendChild(ring);
+  const ticks=[],choices=[];
+  for(let i=0;i<12;i++){
+   const tick=document.createElement('div');tick.className='tm-note-tick';tick.style.transform=`rotate(${i*30}deg)`;wrap.appendChild(tick);ticks.push(tick);
+   const b=document.createElement('button');b.type='button';b.className='tm-note-choice';const a=i*Math.PI/6;
+   const radius=wrap.classList.contains('tm-note-dial')?34.3:34.3; // percentage of dial width
+   b.style.left=`${50+radius*Math.sin(a)}%`;b.style.top=`${50-radius*Math.cos(a)}%`;
+   b.addEventListener('click',()=>{updateSource(input,i);sync()});wrap.appendChild(b);choices.push(b);
+  }
+  const disc=document.createElement('div');disc.className='tm-note-disc';wrap.appendChild(disc);
+  const sync=()=>{const v=clamp(Number(input.value)||0,0,11);disc.textContent=fmtNote(v);choices.forEach((b,i)=>{const label=fmtNote(i);b.textContent=label;b.title=label;b.setAttribute('aria-label',`Select ${label}`);b.setAttribute('aria-pressed',String(i===v));b.classList.toggle('selected',i===v);ticks[i].classList.toggle('selected',i===v)})};
+  input.insertAdjacentElement('afterend',wrap);input.classList.add('tm-dial-source');
+  input.addEventListener('change',sync);input.addEventListener('input',sync);
+  return sync;
+ }
+ specs.forEach(spec=>{const el=document.getElementById(spec.id);if(!el)return;instances.push((spec.kind==='bpm'?buildBpm:buildNote)(el))});
+ const syncAll=()=>instances.forEach(fn=>fn());
+ window.tmSyncDials=syncAll;
+ // Existing restore/load operations set properties programmatically without firing events.
+ // Wrap those operations without changing their saved data format or musical behavior.
+ if(typeof restoreSection==='function'){
+   const oldRestore=restoreSection;
+   restoreSection=function(...args){const result=oldRestore.apply(this,args);syncAll();return result};
+ }
+ if(typeof rebuild==='function'){
+   const oldRebuild=rebuild;
+   rebuild=function(...args){const result=oldRebuild.apply(this,args);syncAll();return result};
+ }
+ if(typeof loadProjectObject==='function'){
+   const oldLoad=loadProjectObject;
+   loadProjectObject=function(...args){const result=oldLoad.apply(this,args);syncAll();return result};
+ }
+ if(typeof newProjectWorkspace==='function'){
+   const oldNew=newProjectWorkspace;
+   newProjectWorkspace=function(...args){const result=oldNew.apply(this,args);syncAll();return result};
+ }
+ const acc=document.getElementById('accidental');if(acc)acc.addEventListener('change',syncAll);
+ syncAll();
+})();
 </script>
 </body></html>
