@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.39</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.40</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -175,7 +175,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
  --tm-dark-panel:#0d0d0d;--tm-help:#aaa;
 }
 body[data-theme="ivory"]{--bg:#f3efe4;--panel:#fffaf0;--line:#cbbfab;--text:#342f29;--muted:#6d6255;--tm-input:#fffdf8;--tm-control:#ebe1d0;--tm-control-line:#b8a88e;--tm-button:#514435;--tm-button-text:#fff8e8;--tm-accent:#907650;--tm-accent-text:#fff9ed;--tm-card:#f6f0e4;--tm-card2:#ebe5db;--tm-card-line:#b7aa99;--tm-goldcard:#e6d6bb;--tm-goldline:#97784c;--tm-strong:#765426;--tm-soft:#625b52;--tm-active:#91724b;--tm-dark-panel:#eee6d8;--tm-help:#686056;--origin:#a94840}
-body[data-theme="sol"]{--bg:#241c14;--panel:#372b1c;--line:#826339;--text:#e8d7b6;--muted:#c2a980;--tm-input:#20180f;--tm-control:#493522;--tm-control-line:#896d44;--tm-button:#bb8c3e;--tm-button-text:#201408;--tm-accent:#d0a456;--tm-accent-text:#201408;--tm-card:#302317;--tm-card2:#423021;--tm-card-line:#9b7545;--tm-goldcard:#544029;--tm-goldline:#b58b4b;--tm-strong:#f1c981;--tm-soft:#ded0ac;--tm-active:#d9a65d;--tm-dark-panel:#2b2117;--tm-help:#d0b993}
+body[data-theme="sol"]{--bg:#493322;--panel:#6a4b30;--line:#b58b5f;--text:#fff0d3;--muted:#e0c8a6;--tm-input:#392719;--tm-control:#765539;--tm-control-line:#c6a16a;--tm-button:#f2cb83;--tm-button-text:#30200f;--tm-accent:#f2cb83;--tm-accent-text:#30200f;--tm-card:#503923;--tm-card2:#61442d;--tm-card-line:#bc9569;--tm-goldcard:#704d2e;--tm-goldline:#d5a965;--tm-strong:#ffdea0;--tm-soft:#f6dfb9;--tm-active:#f2cb83;--tm-dark-panel:#42301f;--tm-help:#f0dabb}
 body[data-theme="luna"]{--bg:#202630;--panel:#2b3442;--line:#586779;--text:#e3e9f3;--muted:#abb9ce;--tm-input:#1d2531;--tm-control:#38465a;--tm-control-line:#6b7d94;--tm-button:#a7b7cc;--tm-button-text:#172132;--tm-accent:#b4c9e4;--tm-accent-text:#172132;--tm-card:#252f3d;--tm-card2:#344052;--tm-card-line:#7c90a6;--tm-goldcard:#39475a;--tm-goldline:#8499b4;--tm-strong:#d0e0f4;--tm-soft:#b4c8df;--tm-active:#a7b7cc;--tm-dark-panel:#232c39;--tm-help:#c0ccdc;--origin:#db8c81}
 body[data-theme="techno"]{--bg:#0a100d;--panel:#101813;--line:#725025;--text:#f2bb69;--muted:#b99565;--tm-input:#0b140e;--tm-control:#19271e;--tm-control-line:#87612b;--tm-button:#dc8a25;--tm-button-text:#14120b;--tm-accent:#ffb43e;--tm-accent-text:#14120b;--tm-card:#142019;--tm-card2:#18261e;--tm-card-line:#87612b;--tm-goldcard:#252215;--tm-goldline:#b57a27;--tm-strong:#ffc15c;--tm-soft:#e7a54b;--tm-active:#ffb000;--tm-dark-panel:#101710;--tm-help:#c99a62;--origin:#ff7049}
 body{background:var(--bg);color:var(--text)}
@@ -226,7 +226,7 @@ body[data-theme="ivory"] .key:not(.selected){opacity:1}
 body[data-theme="ivory"] .tm-modal::backdrop{background:rgba(25,20,12,.6)}
 @media(max-width:700px){.tm-header{margin:8px auto 10px;padding:11px;border-radius:9px}.tm-title-row h1{font-size:23px}.tm-subtitle{font-size:11px}.tm-header-actions select{min-width:115px;font-size:12px}.tm-header-actions button{font-size:12px}.tm-modal-inner{padding:19px}}
 </style></head>
-<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">Techno</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
+<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">Techno</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
 
 <section class="panel">
@@ -356,6 +356,17 @@ function addSection(){persistActiveSection();let i=sections.length;sections.push
 function duplicateCurrentSection(){persistActiveSection();let x=JSON.parse(JSON.stringify(sections[activeSection]));x.name+=" COPY";sections.splice(activeSection+1,0,x);restoreSection(activeSection+1)}
 function deleteCurrentSection(){if(sections.length<=1)return;sections.splice(activeSection,1);activeSection=Math.min(activeSection,sections.length-1);restoreSection(activeSection)}
 function projectObject(){persistActiveSection();return {format:"TONAL_MAGIC_PROJECT",version:1,name:projectName.value||"UNTITLED PROJECT",activeSection,sections,progressionBpm:+progBpm.value||80,progressionPlayMode:progPlayMode.value,arpRate:+arpRate.value||0.5,progressions:progressionsData,activeProgression}}
+function newProjectWorkspace(){
+  if(!confirm("Create a new project? Unsaved changes to the current project will be lost. Save your project first if needed."))return;
+  stopAll();
+  projectName.value="UNTITLED PROJECT";
+  progBpm.value="80";progPlayMode.value="block";arpRate.value="0.5";progLoop.value="off";
+  progressionsData=[];activeProgression=0;
+  sections=[makeSection("SECTION A","")];activeSection=0;
+  isRestoringSection=true;
+  restoreSection(0);
+  addProgressionObj("Progression A");
+}
 function downloadProject(){let o=projectObject(),blob=new Blob([JSON.stringify(o,null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=(o.name.replace(/[^a-z0-9_-]+/gi,"_")||"TONAL_MAGIC")+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function loadProjectObject(o){if(!o||o.format!=="TONAL_MAGIC_PROJECT"||!o.sections?.length)return;projectName.value=o.name||"UNTITLED PROJECT";sections=o.sections;progressionsData=o.progressions||[];activeProgression=Math.min(o.activeProgression||0,Math.max(0,progressionsData.length-1));progBpm.value=o.progressionBpm||80;progPlayMode.value=o.progressionPlayMode||"block";arpRate.value=String(o.arpRate||0.5);isRestoringSection=true;activeSection=Math.min(o.activeSection||0,sections.length-1);isRestoringSection=false;restoreSection(activeSection)}
 function rebuild(){let a=parse();origin=new Set(a.filter(x=>!x.space&&!x.mute).map(x=>pc(x.midi)));selected=new Set(origin);let first=a.find(x=>!x.space&&!x.mute);if(first)startNote.value=String(pc(first.midi));refreshStartNoteLabels();render(a);syncHarmSlots();persistActiveSection()}
@@ -574,7 +585,7 @@ all12.onclick=()=>{selected=new Set([...Array(12).keys()]);keys();collection.tex
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));renderChords()});
 showAllChords.onclick=()=>{chordView="all";showAllChords.classList.add("active");showFavChords.classList.remove("active");renderChords()};showFavChords.onclick=()=>{chordView="fav";showFavChords.classList.add("active");showAllChords.classList.remove("active");renderChords()};
 newProgression.onclick=()=>addProgressionObj();playHarm.onclick=playHarmFn;document.getElementById("stopHarm").onclick=stopAll;document.getElementById("addHarmSketch").onclick=addHarmonizationToSketchbook;copyHarm.onclick=()=>copyText(harmText());midiHarm.onclick=()=>exportChordListMidi(harmSlots.filter(x=>x.chord).map(x=>x.chord),+progBpm.value||80,"TONAL_MAGIC_harmonization.mid");clearHarm.onclick=()=>{harmSlots.forEach(x=>x.chord=null);renderHarm()};
-newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
+newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};document.getElementById("newProject").onclick=newProjectWorkspace;saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
 const scalesEl=document.getElementById("scales"),chordsEl=document.getElementById("chords");
 initializeScalePresets();
 addProgressionObj("Progression A");sections=[makeSection("SECTION A","LOVE THE EARTH")];activeSection=0;isRestoringSection=true;restoreSection(0);
@@ -588,7 +599,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.39";
+  const TM_VERSION="2.40";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#241c14",luna:"#202630",techno:"#0a100d"};
   const storageKey="tonal-magic-ui-theme";
