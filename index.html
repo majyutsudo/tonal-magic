@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Scale & Chord Workbench v2.30 PWA</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.39</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -164,9 +164,70 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 }
 
 .wordLabelRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}.wordLabelRow label{margin:0}.wordLabelRow button{padding:5px 10px;font-size:11px}.wordPresetControls{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.wordPresetControls select{flex:1;min-width:145px}.wordPresetControls button{padding:7px 9px;font-size:11px}.wordPresetControls+ .small{margin-top:5px}
+\n
+/* TONAL MAGIC v2.39 — application chrome and five independent visual themes */
+:root{
+ --tm-input:#0e0e0e;--tm-control:#292929;--tm-control-line:#444;
+ --tm-button:#eee;--tm-button-text:#111;--tm-accent:#d9a65d;
+ --tm-accent-text:#17120c;--tm-card:#111;--tm-card2:#171a1d;
+ --tm-card-line:#3d4650;--tm-goldcard:#2b2114;--tm-goldline:#9b6b32;
+ --tm-strong:#e2b56f;--tm-soft:#b9c2cc;--tm-active:#d9a65d;
+ --tm-dark-panel:#0d0d0d;--tm-help:#aaa;
+}
+body[data-theme="ivory"]{--bg:#f3efe4;--panel:#fffaf0;--line:#cbbfab;--text:#342f29;--muted:#6d6255;--tm-input:#fffdf8;--tm-control:#ebe1d0;--tm-control-line:#b8a88e;--tm-button:#514435;--tm-button-text:#fff8e8;--tm-accent:#907650;--tm-accent-text:#fff9ed;--tm-card:#f6f0e4;--tm-card2:#ebe5db;--tm-card-line:#b7aa99;--tm-goldcard:#e6d6bb;--tm-goldline:#97784c;--tm-strong:#765426;--tm-soft:#625b52;--tm-active:#91724b;--tm-dark-panel:#eee6d8;--tm-help:#686056;--origin:#a94840}
+body[data-theme="sol"]{--bg:#241c14;--panel:#372b1c;--line:#826339;--text:#e8d7b6;--muted:#c2a980;--tm-input:#20180f;--tm-control:#493522;--tm-control-line:#896d44;--tm-button:#bb8c3e;--tm-button-text:#201408;--tm-accent:#d0a456;--tm-accent-text:#201408;--tm-card:#302317;--tm-card2:#423021;--tm-card-line:#9b7545;--tm-goldcard:#544029;--tm-goldline:#b58b4b;--tm-strong:#f1c981;--tm-soft:#ded0ac;--tm-active:#d9a65d;--tm-dark-panel:#2b2117;--tm-help:#d0b993}
+body[data-theme="luna"]{--bg:#202630;--panel:#2b3442;--line:#586779;--text:#e3e9f3;--muted:#abb9ce;--tm-input:#1d2531;--tm-control:#38465a;--tm-control-line:#6b7d94;--tm-button:#a7b7cc;--tm-button-text:#172132;--tm-accent:#b4c9e4;--tm-accent-text:#172132;--tm-card:#252f3d;--tm-card2:#344052;--tm-card-line:#7c90a6;--tm-goldcard:#39475a;--tm-goldline:#8499b4;--tm-strong:#d0e0f4;--tm-soft:#b4c8df;--tm-active:#a7b7cc;--tm-dark-panel:#232c39;--tm-help:#c0ccdc;--origin:#db8c81}
+body[data-theme="techno"]{--bg:#0a100d;--panel:#101813;--line:#725025;--text:#f2bb69;--muted:#b99565;--tm-input:#0b140e;--tm-control:#19271e;--tm-control-line:#87612b;--tm-button:#dc8a25;--tm-button-text:#14120b;--tm-accent:#ffb43e;--tm-accent-text:#14120b;--tm-card:#142019;--tm-card2:#18261e;--tm-card-line:#87612b;--tm-goldcard:#252215;--tm-goldline:#b57a27;--tm-strong:#ffc15c;--tm-soft:#e7a54b;--tm-active:#ffb000;--tm-dark-panel:#101710;--tm-help:#c99a62;--origin:#ff7049}
+body{background:var(--bg);color:var(--text)}
+textarea,select,input{background:var(--tm-input);color:var(--text);border-color:var(--line)}
+button{background:var(--tm-button);color:var(--tm-button-text)}
+button.secondary{background:var(--tm-control);color:var(--text);border-color:var(--tm-control-line)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--tm-accent);outline-offset:2px}
+.panel{background:var(--panel);border-color:var(--line)}
+.projectbar{background:var(--tm-dark-panel);border-color:var(--line)}
+.cell,.numberCell,.prog,.hslot{background:var(--tm-card);border-color:var(--line)}
+.pill,.mapCell{background:var(--tm-card);border-color:var(--line);color:var(--text)}
+.chord,.miniChord{background:var(--tm-card2);border-color:var(--tm-card-line);color:var(--text)}
+.chord.named,.miniChord.named{background:var(--tm-goldcard);border-color:var(--tm-goldline)}
+.chord.named strong,.mapPitch,.numberCell .nvalue{color:var(--tm-strong)}
+.chord:not(.named) strong{color:var(--tm-soft)}
+.tabs button.active,.sectiontab.active{background:var(--tm-accent);color:var(--tm-accent-text)}
+.chord.favorite{outline-color:var(--tm-accent);background:var(--tm-accent);color:var(--tm-accent-text)}
+.chord.favorite strong,.chord.favorite .notes{color:var(--tm-accent-text)}
+.hslot.active,.miniChord.selectedCard{outline-color:var(--tm-accent)}
+.progPanel{background:var(--tm-card);border-color:var(--line)}
+.mapCell.wordActive{background:var(--tm-goldcard);border-color:var(--tm-goldline)}
+.mapLetter.active{color:var(--tm-strong)}
+.letter,.note,.progname,.prognotes,.originTag{color:inherit}
+.legends,.legend,.chord .notes,.hslot .pitch,.prognotes{color:var(--tm-help)}
+#advancedMapping{border-color:var(--tm-goldline)!important}
+#advancedMapping summary,#letterToneMap,.panel details summary{color:var(--tm-accent)!important}
+#availableRoot{color:var(--tm-accent)!important}
+body[data-theme="ivory"] .key:not(.selected){opacity:1}
+.tm-header{max-width:1120px;margin:18px auto 14px;padding:15px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.tm-header-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tm-identity{min-width:0}.tm-title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tm-title-row h1{font-size:27px;letter-spacing:.075em;margin:0}.tm-version{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.tm-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+.tm-header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tm-header-actions label{margin:0;font-size:11px}.tm-header-actions select{width:auto;min-width:128px;padding:8px 9px}
+.tm-header-actions button{padding:8px 13px}
+.tm-modal{border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--text);padding:0;max-width:min(440px,calc(100vw - 28px));width:100%;max-height:calc(100vh - 28px);overflow:auto;box-shadow:0 15px 60px #0009}
+.tm-modal::backdrop{background:rgba(0,0,0,.73)}
+.tm-modal-inner{padding:24px;text-align:center}
+.tm-close{float:right;margin:-8px -8px 4px 8px;font-size:20px;line-height:1}
+.tm-app-icon{display:block;width:100px;height:100px;margin:6px auto 15px;border-radius:20px;border:1px solid var(--line)}
+.tm-about-title{font:26px Georgia,serif;letter-spacing:.06em;margin:0}
+.tm-about-subtitle{margin:7px 0 19px;color:var(--muted);font-size:13px}
+.tm-credit,.tm-copy{margin:8px 0;font-size:13px}
+.tm-copy{color:var(--muted);font-size:12px}
+.tm-modal a{color:var(--tm-accent);text-underline-offset:3px}
+.tm-license{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
+body[data-theme="ivory"] .tm-modal::backdrop{background:rgba(25,20,12,.6)}
+@media(max-width:700px){.tm-header{margin:8px auto 10px;padding:11px;border-radius:9px}.tm-title-row h1{font-size:23px}.tm-subtitle{font-size:11px}.tm-header-actions select{min-width:115px;font-size:12px}.tm-header-actions button{font-size:12px}.tm-modal-inner{padding:19px}}
 </style></head>
-<body><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
-<h1>TONAL MAGIC</h1><div class="subtitle">Letter-Tone → Pitch Collection → Scale → Chord Workbench</div>
+<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">Techno</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
+
 
 <section class="panel">
 <div class="grid">
@@ -228,7 +289,7 @@ button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;background:#ee
 <div class="controls" style="grid-template-columns:150px 170px 130px 120px auto"><div><label>PROGRESSION BPM</label><input id="progBpm" type="number" min="30" max="240" value="80"></div><div><label>PLAY MODE</label><select id="progPlayMode"><option value="block" selected>BLOCK</option><option value="up">ARP ↑</option><option value="down">ARP ↓</option><option value="updown">ARP ↑↓</option></select></div><div><label>ARP RATE</label><select id="arpRate"><option value="1">1/4</option><option value="0.5" selected>1/8</option><option value="0.25">1/16</option></select></div><div><label>LOOP</label><select id="progLoop"><option value="off" selected>OFF</option><option value="on">ON</option></select></div><button id="newProgression">＋ NEW PROGRESSION</button></div>
 <div id="progressions" class="progressions"></div>
 </section>
-</main><div class="versionBadge">TONAL MAGIC v2.38 PWA</div>
+</main><dialog id="tmAbout" class="tm-modal" aria-labelledby="tmAboutTitle"><div class="tm-modal-inner"><button type="button" class="secondary tm-close" id="tmAboutClose" aria-label="Close About">×</button><img class="tm-app-icon" src="icon-192.png" alt="TONAL MAGIC icon"><h2 class="tm-about-title" id="tmAboutTitle">TONAL MAGIC</h2><p class="tm-about-subtitle">Letter-Tone Generator</p><p class="tm-credit">Created by <a href="https://majyutsudo.wpcomstaging.com/" target="_blank" rel="noopener noreferrer">Majyutsudo</a></p><p class="tm-copy" id="tmAboutVersion"></p><p class="tm-copy">© 2026 Majyutsudo</p><div class="tm-license"><a href="https://github.com/majyutsudo/tonal-magic/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer" id="tmLicenseLink">License &amp; Disclaimer</a></div></div></dialog>
 <script>
 const LATIN={A:["C3",48],B:["C#3",49],C:["D3",50],D:["D#3",51],E:["E3",52],F:["F3",53],G:["F#3",54],H:["G3",55],I:["G#3",56],J:["A3",57],K:["A#3",58],L:["B3",59],M:["C4",60],N:["C#4",61],O:["D4",62],P:["D#4",63],Q:["E4",64],R:["F4",65],S:["F#4",66],T:["G4",67],U:["A4",69],V:["A4",69],W:["A4",69],X:["G#4",68],Y:["A#4",70],Z:["B4",71]};
 const GREEK={Α:["C3",48],Β:["C#3",49],Γ:["D3",50],Δ:["D#3",51],Ε:["E3",52],Ζ:["F3",53],Η:["F#3",54],Θ:["G3",55],Ι:["G#3",56],Κ:["A3",57],Λ:["A#3",58],Μ:["B3",59],Ν:["C4",60],Ξ:["C#4",61],Ο:["D4",62],Π:["D#4",63],Ρ:["E4",64],Σ:["F4",65],Τ:["F#4",66],Υ:["G4",67],Φ:["G#4",68],Χ:["A4",69],Ψ:["A#4",70],Ω:["B4",71]};
@@ -522,5 +583,36 @@ addProgressionObj("Progression A");sections=[makeSection("SECTION A","LOVE THE E
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+</script>
+
+<script>
+/* App presentation is intentionally isolated from composition/project state. */
+(function(){
+  const TM_VERSION="2.39";
+  const themes=["nocturne","ivory","sol","luna","techno"];
+  const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#241c14",luna:"#202630",techno:"#0a100d"};
+  const storageKey="tonal-magic-ui-theme";
+  const themeSelect=document.getElementById("tmTheme");
+  const dialog=document.getElementById("tmAbout");
+  const versionLabel="v"+TM_VERSION;
+  document.title="TONAL MAGIC — Letter-Tone Generator "+versionLabel;
+  document.getElementById("tmHeaderVersion").textContent=versionLabel;
+  document.getElementById("tmAboutVersion").textContent="Version "+TM_VERSION;
+  function applyTheme(theme){
+    if(!themes.includes(theme))theme="nocturne";
+    document.body.dataset.theme=theme;
+    themeSelect.value=theme;
+    const meta=document.querySelector('meta[name="theme-color"]');
+    if(meta)meta.content=colors[theme];
+    try{localStorage.setItem(storageKey,theme)}catch(e){}
+  }
+  let preferred="nocturne";
+  try{preferred=localStorage.getItem(storageKey)||preferred}catch(e){}
+  applyTheme(preferred);
+  themeSelect.addEventListener("change",()=>applyTheme(themeSelect.value));
+  document.getElementById("tmAboutOpen").addEventListener("click",()=>dialog.showModal());
+  document.getElementById("tmAboutClose").addEventListener("click",()=>dialog.close());
+  dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close()});
+})();
 </script>
 </body></html>
