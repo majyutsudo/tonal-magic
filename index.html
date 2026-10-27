@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.50</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.51</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -410,8 +410,14 @@ body[data-theme="techno"] #sketchbook .tm-knob-value::-webkit-outer-spin-button{
 .tm-close{float:none;position:absolute;top:16px;right:16px;margin:0;z-index:2}
 .tm-app-icon{margin:8px auto 15px}
 body[data-theme="techno"] .projectbar::before{content:"PROJECT / " attr(data-project-number)}
+
+/* v2.51: use a real DOM label instead of CSS attr() for iOS installed PWA. */
+body[data-theme="techno"] .projectbar::before{display:none!important;content:none!important}
+.tm-project-number{display:none}
+body[data-theme="techno"] .tm-project-number{display:block;position:absolute;right:12px;top:-1px;padding:5px 7px;background:#ee3029;color:white;font:700 9px monospace;letter-spacing:.08em;pointer-events:none}
+@media(max-width:700px){body[data-theme="techno"] .tm-project-number{font-size:7px}}
 </style></head>
-<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
+<body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><span class="tm-project-number" id="tmProjectNumber" aria-label="Project name numerology">PROJECT / 66</span><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
 
 <section class="panel">
@@ -784,7 +790,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.50";
+  const TM_VERSION="2.51";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
@@ -926,6 +932,8 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   let reduced=total;
   while(reduced>9)reduced=String(reduced).split("").reduce((sum,x)=>sum+Number(x),0);
   bar.dataset.projectNumber=number;
+  const label=document.getElementById("tmProjectNumber");
+  if(label){label.textContent="PROJECT / "+number;label.title="Project name numerology: "+total+" → "+reduced;}
   bar.title="Project name numerology: "+total+" → "+reduced;
  }
  field.addEventListener("input",update);
