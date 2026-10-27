@@ -1,5 +1,5 @@
 /* TONAL MAGIC: network-first HTML to avoid stale installed PWA screens. */
-const CACHE='tonal-magic-v249-refresh1';
+const CACHE='tonal-magic-v250';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
