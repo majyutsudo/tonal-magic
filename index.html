@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.49</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.50</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -404,6 +404,12 @@ body[data-theme="techno"] #sketchbook .tm-knob-value{
 }
 body[data-theme="techno"] #sketchbook .tm-knob-value::-webkit-inner-spin-button,
 body[data-theme="techno"] #sketchbook .tm-knob-value::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+/* v2.50: modal artwork centered independently of close control. */
+.tm-modal-inner{position:relative}
+.tm-close{float:none;position:absolute;top:16px;right:16px;margin:0;z-index:2}
+.tm-app-icon{margin:8px auto 15px}
+body[data-theme="techno"] .projectbar::before{content:"PROJECT / " attr(data-project-number)}
 </style></head>
 <body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
@@ -778,7 +784,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.49";
+  const TM_VERSION="2.50";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
@@ -901,6 +907,37 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
  }
  const acc=document.getElementById('accidental');if(acc)acc.addEventListener('change',syncAll);
  syncAll();
+})();
+</script>
+
+<script>
+/* v2.50 — B-2 project label: fixed modern numerology A=1...I=9, repeated. */
+(function(){
+ const field=document.getElementById("projectName"),bar=document.querySelector(".projectbar");
+ if(!field||!bar)return;
+ function update(){
+  const latin=(field.value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+  let total=0;
+  for(const ch of latin){
+   const n=ch.charCodeAt(0)-65;
+   if(n>=0&&n<26)total+=(n%9)+1;
+  }
+  const number=String(total).padStart(2,"0");
+  let reduced=total;
+  while(reduced>9)reduced=String(reduced).split("").reduce((sum,x)=>sum+Number(x),0);
+  bar.dataset.projectNumber=number;
+  bar.title="Project name numerology: "+total+" → "+reduced;
+ }
+ field.addEventListener("input",update);
+ field.addEventListener("change",update);
+ // Loading and creating projects assign to this field without dispatching events.
+ if(typeof loadProjectObject==="function"){
+   const old=loadProjectObject;loadProjectObject=function(...args){const result=old.apply(this,args);update();return result};
+ }
+ if(typeof newProjectWorkspace==="function"){
+   const old=newProjectWorkspace;newProjectWorkspace=function(...args){const result=old.apply(this,args);update();return result};
+ }
+ update();
 })();
 </script>
 </body></html>
