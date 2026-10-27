@@ -23,6 +23,17 @@
 .machine-id{position:absolute;color:#f4ead8;font:700 9px/1.2 'Courier New',monospace;letter-spacing:.08em}
 .m-a{top:11px;left:12px}.m-b{right:12px;bottom:11px}.m-c{left:12px;bottom:11px;opacity:.85}
 @media(max-width:620px){.company,.top-right{font-size:8px}.machine-v3{min-height:245px}.diagram{padding-top:14px;padding-bottom:14px}}
+
+/* Mobile portrait: diagram above explanatory copy; avoid the overlapping figure labels. */
+@media(max-width:620px){
+ .plate{grid-template-columns:minmax(0,1fr)}
+ .diagram{min-width:0;border-right:0;border-bottom:1px solid var(--black);padding:14px 0}
+ .machine-v3{min-width:0;min-height:265px}
+ .mechanics{min-width:0;padding:16px 0}
+ .m-b{left:12px;right:auto;bottom:29px}
+ .m-c{left:12px;right:auto;bottom:11px}
+ .machine-id{font-size:8px}
+}
 </style>
 </head>
 <body>
