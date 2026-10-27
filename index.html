@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.53</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.54</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -744,7 +744,48 @@ async function playChord(a){stopAll();let c=ac();await c.resume(),base=(+scaleOc
 
 function arpPattern(notes,mode){let a=[...notes].sort((x,y)=>x-y);if(mode==="down")return [...a].reverse();if(mode==="updown"){if(a.length<2)return a;return a.concat([...a].reverse().slice(1,-1))}return a}
 async function playChordList(list,bpmv,playMode="block",rate=.5,loop=false){stopAll();let myGeneration=playGeneration,sounding=list.filter(x=>x.notes&&x.notes.length);if(!sounding.length)return;let c=ac();await c.resume();if(myGeneration!==playGeneration)return;let base=(+scaleOct.value+1)*12,t=c.currentTime+.05,beat=60/Math.max(30,Math.min(240,bpmv)),cursor=0;sounding.forEach(x=>{let beats=Math.max(1,+x.beats||4),chordStart=t+cursor*beat;if(playMode==="block"){x.notes.forEach(p=>tone(base+p,chordStart,Math.max(.2,beat*beats*.88),.065))}else{let pat=arpPattern(x.notes,playMode),step=beat*Math.max(.25,Math.min(1,rate)),steps=Math.max(1,Math.round((beat*beats)/step));for(let j=0;j<steps;j++)tone(base+pat[j%pat.length],chordStart+j*step,Math.max(.12,step*.82),.08)}cursor+=beats});if(loop){let durationMs=cursor*beat*1000;loopTimer=setTimeout(()=>{if(myGeneration===playGeneration)playChordList(list,bpmv,playMode,rate,true)},durationMs)}}
-async function playHarmFn(){await playChordList(harmSlots.filter(x=>x.chord).map(x=>({...x.chord,beats:1})),+bpm.value||80,"block",.5)}
+async function playHarmFn(){
+  stopAll();
+  const c=ac();await c.resume();
+  const t0=c.currentTime+.05,beat=q(),duration=Math.max(.55,beat*1.35);
+  const base=(+scaleOct.value+1)*12,shift=(+seqOct.value)*12;
+  let cursor=0,slot=0;
+  for(const item of parse()){
+    if(item.space){cursor++;continue}
+    if(item.mute)continue;
+    const chord=harmSlots[slot++]?.chord;
+    if(chord?.notes?.length)for(const p of chord.notes)tone(base+p+shift,t0+cursor*beat,duration,.065);
+    cursor++;
+  }
+}
+function exportHarmonizationMidi(){
+  const ppq=480,events=[];let order=0,cursor=0,slot=0;
+  const base=(+scaleOct.value+1)*12,shift=(+seqOct.value)*12;
+  const duration=Math.round(Math.max(.55,q()*1.35)/q()*ppq);
+  for(const item of parse()){
+    if(item.space){cursor++;continue}
+    if(item.mute)continue;
+    const chord=harmSlots[slot++]?.chord;
+    if(chord?.notes?.length)for(const p of chord.notes){
+      const n=Math.max(0,Math.min(127,base+p+shift)),tick=cursor*ppq;
+      events.push({tick,order:order++,bytes:[0x90,n,92]},{tick:tick+duration,order:order++,bytes:[0x80,n,0]});
+    }
+    cursor++;
+  }
+  if(!events.length)return;
+  events.sort((x,y)=>x.tick-y.tick||x.order-y.order);
+  const tempo=Math.round(60000000/Math.max(30,Math.min(240,+bpm.value||80)));
+  const track=[0,255,81,3,(tempo>>16)&255,(tempo>>8)&255,tempo&255];let last=0;
+  for(const e of events){track.push(...vlq(e.tick-last),...e.bytes);last=e.tick}
+  track.push(0,255,47,0);
+  const head=[77,84,104,100,0,0,0,6,0,0,0,1,...u16(ppq)];
+  const chunk=[77,84,114,107,...u32(track.length),...track];
+  const blob=new Blob([new Uint8Array([...head,...chunk])],{type:"audio/midi"});
+  const url=URL.createObjectURL(blob),link=document.createElement("a");
+  link.href=url;link.download="TONAL_MAGIC_harmonization.mid";
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 async function copyText(txt){if(!txt)return;try{await navigator.clipboard.writeText(txt)}catch(e){let ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}}
 function vlq(v){let b=v&127,a=[];while(v>>=7){b<<=8;b|=(v&127)|128}while(1){a.push(b&255);if(b&128)b>>=8;else break}return a}function u16(n){return[(n>>8)&255,n&255]}function u32(n){return[(n>>24)&255,(n>>16)&255,(n>>8)&255,n&255]}
 function exportChordListMidi(list,bpmv,filename,playMode="block",rate=.5){list=list.filter(x=>x.notes&&x.notes.length);if(!list.length)return;const ppq=480,beat=ppq,events=[];let order=0,base=(+scaleOct.value+1)*12,cursor=0;list.forEach(x=>{let beats=Math.max(1,+x.beats||4),st=cursor*beat;if(playMode==="block"){let en=st+beat*beats;x.notes.forEach(p=>{let n=Math.max(0,Math.min(127,base+p));events.push({tick:st,order:order++,bytes:[0x90,n,92]},{tick:en,order:order++,bytes:[0x80,n,0]})})}else{let pat=arpPattern(x.notes,playMode),step=Math.max(1,Math.round(beat*Math.max(.25,Math.min(1,rate)))),steps=Math.max(1,Math.round((beat*beats)/step)),dur=Math.max(1,Math.round(step*.82));for(let j=0;j<steps;j++){let n=Math.max(0,Math.min(127,base+pat[j%pat.length])),ns=st+j*step;events.push({tick:ns,order:order++,bytes:[0x90,n,92]},{tick:ns+dur,order:order++,bytes:[0x80,n,0]})}}cursor+=beats});events.sort((a,b)=>a.tick-b.tick||a.order-b.order);let track=[],mpqn=Math.round(60000000/Math.max(30,Math.min(240,bpmv)));track.push(0,255,81,3,(mpqn>>16)&255,(mpqn>>8)&255,mpqn&255);let last=0;events.forEach(e=>{track.push(...vlq(e.tick-last),...e.bytes);last=e.tick});track.push(0,255,47,0);let head=[77,84,104,100,0,0,0,6,0,0,0,1,...u16(ppq)],chunk=[77,84,114,107,...u32(track.length),...track],blob=new Blob([new Uint8Array([...head,...chunk])],{type:"audio/midi"}),url=URL.createObjectURL(blob),aa=document.createElement("a");aa.href=url;aa.download=filename;document.body.appendChild(aa);aa.click();aa.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
@@ -775,7 +816,7 @@ clearAdded.onclick=()=>{selected=new Set();keys();collection.textContent=collect
 all12.onclick=()=>{selected=new Set([...Array(12).keys()]);keys();collection.textContent=collectionText();updateAvailableLetters();renderChords();persistActiveSection()};
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));renderChords()});
 showAllChords.onclick=()=>{chordView="all";showAllChords.classList.add("active");showFavChords.classList.remove("active");renderChords()};showFavChords.onclick=()=>{chordView="fav";showFavChords.classList.add("active");showAllChords.classList.remove("active");renderChords()};
-newProgression.onclick=()=>addProgressionObj();playHarm.onclick=playHarmFn;document.getElementById("stopHarm").onclick=stopAll;document.getElementById("addHarmSketch").onclick=addHarmonizationToSketchbook;copyHarm.onclick=()=>copyText(harmText());midiHarm.onclick=()=>exportChordListMidi(harmSlots.filter(x=>x.chord).map(x=>({...x.chord,beats:1})),+bpm.value||80,"TONAL_MAGIC_harmonization.mid");clearHarm.onclick=()=>{harmSlots.forEach(x=>x.chord=null);renderHarm()};
+newProgression.onclick=()=>addProgressionObj();playHarm.onclick=playHarmFn;document.getElementById("stopHarm").onclick=stopAll;document.getElementById("addHarmSketch").onclick=addHarmonizationToSketchbook;copyHarm.onclick=()=>copyText(harmText());midiHarm.onclick=exportHarmonizationMidi;clearHarm.onclick=()=>{harmSlots.forEach(x=>x.chord=null);renderHarm()};
 newSection.onclick=addSection;duplicateSection.onclick=duplicateCurrentSection;deleteSection.onclick=deleteCurrentSection;renameSection.onclick=()=>{let n=prompt("Section name",sections[activeSection]?.name||"");if(n&&n.trim()){sections[activeSection].name=n.trim();persistActiveSection()}};document.getElementById("newProject").onclick=newProjectWorkspace;saveProject.onclick=downloadProject;loadProject.onclick=()=>projectFile.click();projectFile.onchange=async()=>{let f=projectFile.files[0];if(!f)return;try{loadProjectObject(JSON.parse(await f.text()))}catch(e){alert("Could not load project file.")}projectFile.value=""};[bpm,seqOct,soundType,scaleOct,direction,letterFilter,letterGrouping,numberMode].forEach(x=>x.addEventListener("change",persistActiveSection));
 const scalesEl=document.getElementById("scales"),chordsEl=document.getElementById("chords");
 initializeScalePresets();
@@ -790,7 +831,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.53";
+  const TM_VERSION="2.54";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
