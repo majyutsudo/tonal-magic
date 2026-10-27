@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="TONAL MAGIC">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>TONAL MAGIC — Letter-Tone Generator v2.54</title>
+<title>TONAL MAGIC — Letter-Tone Generator v2.55</title>
 <style>
 :root{--bg:#111;--panel:#191919;--line:#343434;--text:#eee;--muted:#999;--origin:#b85b52}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -416,6 +416,10 @@ body[data-theme="techno"] .projectbar::before{display:none!important;content:non
 .tm-project-number{display:none}
 body[data-theme="techno"] .tm-project-number{display:block;position:absolute;right:12px;top:-1px;padding:5px 7px;background:#ee3029;color:white;font:700 9px monospace;letter-spacing:.08em;pointer-events:none}
 @media(max-width:700px){body[data-theme="techno"] .tm-project-number{font-size:7px}}
+
+/* Harmonic sequence: show the same space/rest positions as PLAY SEQUENCE. */
+.harm-rest{opacity:.52;border-style:dashed!important;cursor:default!important;pointer-events:none}
+.harm-rest .glyph{font-size:21px}
 </style></head>
 <body><header class="tm-header"><div class="tm-header-row"><div class="tm-identity"><div class="tm-title-row"><h1>TONAL MAGIC</h1><span class="tm-version" id="tmHeaderVersion"></span></div><div class="tm-subtitle">Letter-Tone Generator</div></div><div class="tm-header-actions"><label for="tmTheme">THEME</label><select id="tmTheme" aria-label="Display theme"><option value="nocturne">Nocturne</option><option value="ivory">Ivory</option><option value="sol">Sol</option><option value="luna">Luna</option><option value="techno">B-2</option></select><button type="button" class="secondary" id="tmAboutOpen">About</button></div></div></header><div class="projectbar"><span class="tm-project-number" id="tmProjectNumber" aria-label="Project name numerology">PROJECT / 66</span><div class="projectrow"><label>PROJECT</label><input id="projectName" value="UNTITLED PROJECT"><button id="newProject" class="secondary" type="button">NEW PROJECT</button><button id="saveProject" class="secondary">SAVE PROJECT</button><button id="loadProject" class="secondary">LOAD PROJECT</button><input id="projectFile" type="file" accept=".json,application/json" style="display:none"></div><div class="sectionbar"><div id="sectionTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div><button id="newSection" class="secondary">＋ SECTION</button><div class="sectionactions"><button id="renameSection" class="secondary">RENAME</button><button id="duplicateSection" class="secondary">DUPLICATE</button><button id="deleteSection" class="secondary">DELETE</button></div></div></div><main>
 
@@ -699,7 +703,7 @@ function chordLabel(notes,name){return name||notes.map(displayName).join("–")}
 function harmSlotKeys(items){let counts={};return items.map(x=>{counts[x.letter]=(counts[x.letter]||0)+1;return `${x.letter}#${counts[x.letter]}`})}
 function rememberHarmSlots(){let keys=harmSlotKeys(harmSlots);harmSlots.forEach((x,i)=>{if(x.chord)harmMemory.set(keys[i],{notes:[...x.chord.notes],name:x.chord.name||""});else harmMemory.delete(keys[i])})}
 function syncHarmSlots(){rememberHarmSlots();let items=parse().filter(x=>!x.space&&!x.mute).map(x=>({letter:x.ch,midi:x.midi,chord:null})),keys=harmSlotKeys(items);harmSlots=items.map((x,i)=>{let ch=harmMemory.get(keys[i]);return {...x,chord:ch?{notes:[...ch.notes],name:ch.name||""}:null}});if(harmTarget>=harmSlots.length)harmTarget=Math.max(0,harmSlots.length-1);renderHarm()}
-function renderHarm(){harmGrid.innerHTML="";if(!harmSlots.length){harmGrid.innerHTML='<span class="small">Enter a letter sequence above.</span>';return}harmSlots.forEach((x,i)=>{let d=document.createElement("div");d.className="hslot"+(i===harmTarget?" active":"")+(x.chord?"":" empty");d.innerHTML=`<div class="glyph">${x.letter}</div><div class="pitch">${displayName(pc(x.midi))}${Math.floor(x.midi/12)-1}</div><div class="assigned">${x.chord?chordLabel(x.chord.notes,x.chord.name):"＋ CHORD"}</div>${x.chord?'<button class="secondary clearSlot" style="margin-top:7px;padding:4px 7px">×</button>':""}`;d.onclick=e=>{harmTarget=i;if(x.chord)playChord(x.chord.notes);renderHarm()};let z=d.querySelector(".clearSlot");if(z)z.onclick=e=>{e.stopPropagation();harmSlots[i].chord=null;renderHarm();rememberHarmSlots();persistActiveSection()};harmGrid.appendChild(d)})}
+function renderHarm(){harmGrid.innerHTML="";if(!harmSlots.length){harmGrid.innerHTML='<span class="small">Enter a letter sequence above.</span>';return}let slotIndex=0;parse().forEach(item=>{if(item.space){let rest=document.createElement("div");rest.className="hslot harm-rest";rest.innerHTML='<div class="glyph">—</div><div class="pitch">REST</div><div class="assigned">1 BEAT</div>';harmGrid.appendChild(rest);return}if(item.mute)return;let i=slotIndex++,x=harmSlots[i];if(!x)return;let d=document.createElement("div");d.className="hslot"+(i===harmTarget?" active":"")+(x.chord?"":" empty");d.innerHTML=`<div class="glyph">${x.letter}</div><div class="pitch">${displayName(pc(x.midi))}${Math.floor(x.midi/12)-1}</div><div class="assigned">${x.chord?chordLabel(x.chord.notes,x.chord.name):"＋ CHORD"}</div>${x.chord?'<button class="secondary clearSlot" style="margin-top:7px;padding:4px 7px">×</button>':""}`;d.onclick=e=>{harmTarget=i;if(x.chord)playChord(x.chord.notes);renderHarm()};let z=d.querySelector(".clearSlot");if(z)z.onclick=e=>{e.stopPropagation();harmSlots[i].chord=null;renderHarm();rememberHarmSlots();persistActiveSection()};harmGrid.appendChild(d)})}
 function assignHarm(notes,name){if(!harmSlots.length)return;harmSlots[harmTarget].chord={notes:[...notes],name:name||""};if(harmTarget<harmSlots.length-1)harmTarget++;renderHarm();rememberHarmSlots();persistActiveSection()}
 function applyHarmonyPreset(){let type=harmPreset.value;if(type==="manual")return;let cfg={nomen:{shift:0,suf:"",iv:[0,4,7]},virtus:{shift:-7,suf:"",iv:[0,4,7]},gratia:{shift:-11,suf:"maj7",iv:[0,4,7,11]},invocatio:{shift:-2,suf:"add9",iv:[0,2,4,7]}}[type];if(!cfg)return;harmSlots.forEach(x=>{let root=pc(x.midi+cfg.shift),notes=cfg.iv.map(v=>pc(root+v));x.chord={notes,name:displayName(root)+cfg.suf}});renderHarm();rememberHarmSlots();persistActiveSection()}
 function parseManualChordSymbol(raw){
@@ -831,7 +835,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 <script>
 /* App presentation is intentionally isolated from composition/project state. */
 (function(){
-  const TM_VERSION="2.54";
+  const TM_VERSION="2.55";
   const themes=["nocturne","ivory","sol","luna","techno"];
   const colors={nocturne:"#111111",ivory:"#f3efe4",sol:"#0a100d",luna:"#202630",techno:"#f4f3ee"};
   const storageKey="tonal-magic-ui-theme";
